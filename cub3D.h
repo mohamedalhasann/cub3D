@@ -6,7 +6,11 @@
 # include <unistd.h>
 # include <fcntl.h>
 
-
+//////////////////////////////////////delete later
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+///////////////////////////////////////
 # define SCREEN_WIDTH  1024
 # define SCREEN_HEIGHT 768
 
@@ -33,6 +37,8 @@ typedef struct s_ray
 
 typedef struct s_map
 {
+    char    **fullmap;
+    int     map_len;
 }   t_map;
 
 typedef struct s_game
