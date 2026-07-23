@@ -45,12 +45,4 @@ typedef struct s_game
 }   t_game;
 
 
-int     render_frame(t_game *game);
-void    init_raycast(t_game *game, t_ray *ray, int x);
-void    perform_dda(t_game *game, t_ray *ray);
-void    draw_wall_column(t_game *game, t_ray *ray, int x);
-
-int     key_hook(int keycode, t_game *game);
-int     close_game(t_game *game);
-
 #endif
