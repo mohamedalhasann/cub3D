@@ -27,12 +27,12 @@ typedef struct s_img
     int width;
     char *address;
     int len;
-
+    int endian;
 }   t_img;
 
 typedef struct s_player
 {
-    double x;
+    double pos_x;
     double y;
 }   t_player;
 
