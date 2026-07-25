@@ -5,7 +5,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
-
+# include "../lib/libft/libft.h"
+# include "../minilibx-linux/mlx.h" 
 
 # define SCREEN_WIDTH  1024
 # define SCREEN_HEIGHT 768
@@ -21,18 +22,32 @@
 
 typedef struct s_img
 {
+    void *image_ptr;
+    int height;
+    int width;
+    char *address;
+    int len;
+
 }   t_img;
 
 typedef struct s_player
 {
+    double x;
+    double y;
 }   t_player;
 
 typedef struct s_ray
 {
+    double camera;
 }   t_ray;
 
 typedef struct s_map
 {
+    char **grid;
+    int width;
+    int height;
+    int floor_color;
+    int ceiling_color;
 }   t_map;
 
 typedef struct s_game
