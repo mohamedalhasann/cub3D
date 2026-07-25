@@ -5,7 +5,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
-
+#include "get_next_line/get_next_line.h"
 //////////////////////////////////////delete later
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
@@ -37,6 +37,7 @@ typedef struct s_ray
 
 typedef struct s_map
 {
+    char    *av;
     char    **fullmap;
     int     map_len;
 }   t_map;
@@ -50,5 +51,5 @@ typedef struct s_game
     t_player    player;
 }   t_game;
 
-
+int check_map(t_game game);
 #endif
