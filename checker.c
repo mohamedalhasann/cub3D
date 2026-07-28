@@ -29,5 +29,5 @@ int check_map(t_game game)
 {
     if(!check_ext(game.map.av))   
         return 1;
-    
+    return 0;
 }
