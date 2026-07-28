@@ -1,4 +1,5 @@
-#include "cub3D.h"
+#include "includes/cub3D.h"
+
 
 void	*ft_memset(void *strng, int cha, size_t n)
 {
@@ -15,7 +16,7 @@ void	*ft_memset(void *strng, int cha, size_t n)
 	return (strng);
 }
 
-void	fill_map(char **map, char *argv)
+void	fill_content(char **content, char *argv)
 {
 	int		x;
 	int		fd;
@@ -32,12 +33,12 @@ void	fill_map(char **map, char *argv)
 		len = ft_strlen(line);
 		while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r'))
 			line[--len] = '\0';
-		map[x] = line;
+		content[x] = line;
 		line = get_next_line(fd);
 		x++;
 	}
 	close(fd);
-	map[x] = NULL;
+	content[x] = NULL;
 }
 
 int	count_lines(char *filename)
@@ -53,7 +54,7 @@ int	count_lines(char *filename)
 	line = get_next_line(fd);
 	while ((line))
 	{ 		
-		printf("%s", line);
+		// printf("%s", line);
 		free(line);
 		line = get_next_line(fd);
 		count++;
@@ -69,15 +70,18 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 		return (1);
-	ft_memset(&game, 0, sizeof(game));
-	game.map.av = argv[1];
-	game.map.map_len = count_lines(game.map.av);
-	if (game.map.map_len == 0)
+	ft_memset(&game.map, 0, sizeof(game));
+	game.map.file_name = argv[1];
+	game.map.file_len = count_lines(game.map.file_name);
+	if (game.map.file_len == 0)
 		return (1);
-	game.map.fullmap = malloc((game.map.map_len + 1) * sizeof(char *));
-	if (!game.map.fullmap)
+	game.map.file_content = malloc((game.map.file_len + 1) * sizeof(char *));
+	if (!game.map.file_content)
 		return (1);
-	fill_map(game.map.fullmap, argv[1]);
-    if(!check_map(game))
+	fill_content(game.map.file_content, argv[1]);
+    if(!check_file(&game))
 		return 1;
 }
+
+
+//gnl has an issue when file is empty

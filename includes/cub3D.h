@@ -7,6 +7,7 @@
 # include <fcntl.h>
 # include "../lib/libft/libft.h"
 # include "../minilibx-linux/mlx.h" 
+# include "../lib/gnl/srcs/get_next_line.h"
 
 # define SCREEN_WIDTH  1024
 # define SCREEN_HEIGHT 768
@@ -112,6 +113,10 @@ typedef struct s_map
     char *west_path;
     char *east_path;
 
+    int     file_len;
+    char    *file_name;
+    char    **file_content;
+    
     t_img north_image;
     t_img west_image;
     t_img east_image;
@@ -128,5 +133,5 @@ typedef struct s_game
     t_player    player;
 }   t_game;
 
-
+int check_file(t_game *game);
 #endif
