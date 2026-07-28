@@ -77,9 +77,6 @@ int	main(int argc, char **argv)
 	if (!game.map.file_content)
 		return (1);
 	fill_content(game.map.file_content, argv[1]);
-
-	// duplicate fields populated so both check_file() and check_map() work
-	// TODO: agree with mate on ONE naming convention and remove the other
 	game.map.av = argv[1];
 	game.map.map_len = game.map.file_len;
 	game.map.fullmap = game.map.file_content;

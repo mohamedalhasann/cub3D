@@ -4,7 +4,6 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
-# include "get_next_line/get_next_line.h"
 # include "../lib/libft/libft.h"
 # include "../minilibx-linux/mlx.h"
 # include "../lib/gnl/srcs/get_next_line.h"
