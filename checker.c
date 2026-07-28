@@ -58,18 +58,6 @@ void get_txtr_paths(t_game *game)
 		i++;
 	}
 }
-// void get_colors(t_game *game)
-// {
-
-// }
-
-// int get_size(int i,char **file_content)
-// {
-// 	int size = 0;
-// 	while(file_content[i])
-// 		size++;
-// 	return size;
-// }
 
 void fill_map(int i,char **file_content,char **grid)
 {
@@ -89,9 +77,9 @@ void fill_map(int i,char **file_content,char **grid)
 		i++;
 	}
 }
+
 void get_map(t_game *game)
 {
-	// int j;
 	int i = 0;
 	while(game->map.file_content[i])
 	{
@@ -110,16 +98,20 @@ int check_file(t_game *game)
     if(!check_ext(game->map.file_name))
 		return 0;
 	get_txtr_paths(game);
-	// printf("north path : %s\n\n",game->map.north_path);
 	if(!game->map.north_path || !game->map.west_path 
 		|| !game->map.south_path || !game->map.east_path)
 	{
 		printf("no directions paths!\n");
 			return 0;
 	}
-	// get_colors(&game);
-	// get_map(game);
 	return 1;
+}
+
+int check_map(t_game game)
+{
+    if(!check_ext(game.map.av))   
+        return 1;
+    return 0;
 }
 
 /*

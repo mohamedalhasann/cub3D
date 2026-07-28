@@ -1,6 +1,5 @@
 #include "includes/cub3D.h"
 
-
 void	*ft_memset(void *strng, int cha, size_t n)
 {
 	size_t			i;
@@ -63,14 +62,13 @@ int	count_lines(char *filename)
 	return (count);
 }
 
-
 int	main(int argc, char **argv)
 {
 	t_game	game;
 
 	if (argc != 2)
 		return (1);
-	ft_memset(&game.map, 0, sizeof(game));
+	ft_memset(&game, 0, sizeof(game));
 	game.map.file_name = argv[1];
 	game.map.file_len = count_lines(game.map.file_name);
 	if (game.map.file_len == 0)
@@ -79,9 +77,18 @@ int	main(int argc, char **argv)
 	if (!game.map.file_content)
 		return (1);
 	fill_content(game.map.file_content, argv[1]);
-    if(!check_file(&game))
-		return 1;
-}
 
+	// duplicate fields populated so both check_file() and check_map() work
+	// TODO: agree with mate on ONE naming convention and remove the other
+	game.map.av = argv[1];
+	game.map.map_len = game.map.file_len;
+	game.map.fullmap = game.map.file_content;
+
+	if (!check_file(&game))
+		return (1);
+	if (!check_map(game))
+		return (1);
+	return (0);
+}
 
 //gnl has an issue when file is empty

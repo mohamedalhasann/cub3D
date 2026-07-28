@@ -1,17 +1,22 @@
 #ifndef CUB3D_H
 # define CUB3D_H
-
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include "get_next_line/get_next_line.h"
 # include "../lib/libft/libft.h"
-# include "../minilibx-linux/mlx.h" 
+# include "../minilibx-linux/mlx.h"
 # include "../lib/gnl/srcs/get_next_line.h"
+
+//////////////////////////////////////delete later
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+///////////////////////////////////////
 
 # define SCREEN_WIDTH  1024
 # define SCREEN_HEIGHT 768
-
 # define KEY_W 119
 # define KEY_A 97
 # define KEY_S 115
@@ -20,7 +25,6 @@
 # define KEY_RIGHT 65363
 # define KEY_ESC 65307
 
-
 // parsing strucutres
 typedef struct s_color
 {
@@ -28,11 +32,13 @@ typedef struct s_color
     int g;
     int b;
 }   t_color;
+
 typedef struct s_point
 {
     int x;
     int y;
 } t_point;
+
 typedef struct s_parse_data
 {
     // these are all flags 1,0 if they exist
@@ -44,7 +50,6 @@ typedef struct s_parse_data
     int ceiling_color_flag;
     int player_count; // tracks N,S,E,W spawns (if its != 1 m the map hass missing or multiple player spawn points)
 }t_parse_data;
-
 
 // --------------------
 
@@ -61,6 +66,8 @@ typedef struct s_img
 
 typedef struct s_player
 {
+    double x;
+    double y;
     char in_map_spawn; // N,S,W,E from map
     double pos_x; // position on grid
     double pos_y; // same here
@@ -74,6 +81,7 @@ typedef struct s_player
 
 typedef struct s_ray
 {
+    double camera;
     int map_x; // current integer map square x the ray is in
     int map_y; //  ---- y
     double camera_x; // -1/0/1
@@ -88,7 +96,7 @@ typedef struct s_ray
     int step_y;
     int hit; // 1 if ray hit a wall, 0 if still moving
     int side; // 1 if hit N/S wall , 0 if hit E/W wall
-    
+
     double perp_wall_dist;
     int line_height;
     int draw_start;
@@ -98,11 +106,14 @@ typedef struct s_ray
     int texture_y;
     double step;
     double texture_position;
-
 }   t_ray;
 
 typedef struct s_map
 {
+    char    *av;
+    char    **fullmap;
+    int     map_len;
+
     char **grid;
     int width;
     int height;
@@ -116,12 +127,11 @@ typedef struct s_map
     int     file_len;
     char    *file_name;
     char    **file_content;
-    
+
     t_img north_image;
     t_img west_image;
     t_img east_image;
     t_img south_image;
-    
 }   t_map;
 
 typedef struct s_game
@@ -133,5 +143,7 @@ typedef struct s_game
     t_player    player;
 }   t_game;
 
+int check_map(t_game game);
 int check_file(t_game *game);
+
 #endif
