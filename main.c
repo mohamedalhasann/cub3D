@@ -83,7 +83,7 @@ int	main(int argc, char **argv)
 
 	if (!check_file(&game))
 		return (1);
-	if (!check_map(game))
+	if (!check_map(&game))
 		return (1);
 	return (0);
 }

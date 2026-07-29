@@ -59,23 +59,34 @@ void get_txtr_paths(t_game *game)
 	}
 }
 
-void fill_map(int i,char **file_content,char **grid)
+int isempty(char *content)
+{
+	if(!ft_isdigit(content) || !isa)
+}
+
+void fill_map(int i,t_game *game)
 {
 	int k = 0;
 	int grid_size = 0;
-	
-	while(file_content[i])
-		grid_size++;
-	grid = malloc(grid_size * sizeof(char *));
-	if(!grid)
-		return;
-	while(file_content[i])
+	int y = i;
+	while(game->map.file_content[y])
 	{
-		grid[k] = ft_strdup(file_content[i]);
-		printf("%s\n",grid[k]);
+		grid_size++;
+		y++;
+	}
+	game->map.grid = malloc(grid_size * sizeof(char *));
+	if(!game->map.grid)
+		return;
+	while(game->map.file_content[i])
+	{
+		if(isempty(game->map.file_content[i]))
+			return;
+		game->map.grid[k] = ft_strdup(game->map.file_content[i]);
+		printf("%s\n",game->map.grid[k]);
 		k++; 
 		i++;
 	}
+	game->map.grid[k] = NULL;
 }
 
 void get_map(t_game *game)
@@ -83,9 +94,15 @@ void get_map(t_game *game)
 	int i = 0;
 	while(game->map.file_content[i])
 	{
-		if(!ft_strncmp(game->map.file_content[i],"11111",5))
+		int j = 0;
+		while(game->map.file_content[i][j] == ' ')
+			j++;
+		if((game->map.file_content[i][j] == 'N' || game->map.file_content[i][j] == 'S' 
+			|| game->map.file_content[i][j] == 'E' || game->map.file_content[i][j] == 'W' || game->map.file_content[i][j] == '1') 
+			&& ft_isdigit(game->map.file_content[i][j + 1]))
 		{
-			fill_map(i,game->map.file_content,game->map.grid);
+			// printf("i=%d checking char: '%c'\n", i, game->map.file_content[i][j]);
+			fill_map(i,game);
 			return;
 		}
 		else
@@ -107,11 +124,13 @@ int check_file(t_game *game)
 	return 1;
 }
 
-int check_map(t_game game)
+int check_map(t_game *game)
 {
-    if(!check_ext(game.map.av))   
-        return 1;
-    return 0;
+    if(!check_file(game))
+		return 1;
+	get_map(game);
+    
+	return 0;
 }
 
 /*

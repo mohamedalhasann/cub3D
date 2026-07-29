@@ -8,11 +8,6 @@
 # include "../minilibx-linux/mlx.h"
 # include "../lib/gnl/srcs/get_next_line.h"
 
-//////////////////////////////////////delete later
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-# endif
-///////////////////////////////////////
 
 # define SCREEN_WIDTH  1024
 # define SCREEN_HEIGHT 768
@@ -142,7 +137,7 @@ typedef struct s_game
     t_player    player;
 }   t_game;
 
-int check_map(t_game game);
+int check_map(t_game *game);
 int check_file(t_game *game);
 
 #endif
