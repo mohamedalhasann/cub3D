@@ -6,7 +6,7 @@
 #    By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/07/25 00:00:00 by mohamed           #+#    #+#              #
-#    Updated: 2026/07/29 13:13:03 by malhassa         ###   ########.fr        #
+#    Updated: 2026/07/29 14:03:19 by malhassa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,12 +18,7 @@ CFLAGS		= -Wall -Wextra -Werror -I.
 SRC_DIR		= srcs
 OBJ_DIR		= obj
 
-SRC			= $(SRC_DIR)/main.c \
-			  $(SRC_DIR)/init.c \
-			  $(SRC_DIR)/hooks.c \
-			  $(SRC_DIR)/raycasting/raycast.c \
-			  $(SRC_DIR)/render/game_loop.c \
-			  $(SRC_DIR)/render/render.c
+SRC			= $(SRC_DIR)
 
 OBJ			= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 
