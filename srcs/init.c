@@ -1,22 +1,24 @@
 #include "../includes/cub3D.h"
-
+static void print_error_message(char *message)
+{
+	ft_putendl_fd(message, 2);
+	exit (1);
+}
 void init_mlx(t_game *game)
 {
-	// error messages format still needs some improvments
 	game->mlx = mlx_init();
 	if (!game->mlx)
-		exit((write(2, "error \nmlx init failed \n", 22), 1));
-
+		print_error_message("error \nmlx init failed");
 	game->win = mlx_new_window(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3D - Raycaster Engine");
 	if (!game->win)
-		exit((write(2, "error \nwindow creation failed\n", 29), 1));
-	
+		print_error_message( "error \nwindow creation failed");	
 	game->frame.image_ptr = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (!game->frame.image_ptr)
-		exit((write(2, "error\nimage creation failed \n", 28), 1));
-
+		print_error_message( "error\nimage creation failed");	
 	game->frame.address = mlx_get_data_addr(game->frame.image_ptr,
 			&game->frame.bpp, &game->frame.len, &game->frame.endian);
+	if (!game->frame.address)
+		print_error_message("error\nframe address creation failed");
 }
 
 int close_game(t_game *game)
