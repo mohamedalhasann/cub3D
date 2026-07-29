@@ -4,6 +4,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <math.h> 
 # include <fcntl.h>
 # include "../lib/libft/libft.h"
 # include "../minilibx-linux/mlx.h" 
@@ -15,10 +16,14 @@
 # define KEY_A 97
 # define KEY_S 115
 # define KEY_D 100
+
 # define KEY_LEFT 65361
 # define KEY_RIGHT 65363
 # define KEY_ESC 65307
 
+# define ON_KEYDOWN 2
+# define ON_KEYUP   3
+# define ON_DESTROY 17
 
 // parsing strucutres
 typedef struct s_color
@@ -41,6 +46,7 @@ typedef struct s_parse_data
     int east_flag;
     int floor_color_flag;
     int ceiling_color_flag;
+    int map_started; // set to 1 when map lines begin
     int player_count; // tracks N,S,E,W spawns (if its != 1 m the map hass missing or multiple player spawn points)
 }t_parse_data;
 
@@ -111,12 +117,11 @@ typedef struct s_map
     char *south_path;
     char *west_path;
     char *east_path;
-
     t_img north_image;
     t_img west_image;
     t_img east_image;
     t_img south_image;
-    
+
 }   t_map;
 
 typedef struct s_game
@@ -128,5 +133,15 @@ typedef struct s_game
     t_player    player;
 }   t_game;
 
+// --------------------
+void	init_mlx(t_game *game);
+int		close_game(t_game *game);
+int		handle_keys(int keycode, t_game *game);
+
+void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
+void	draw_floor_ceiling(t_game *game);
+int		render_frame(t_game *game);
+void	cast_all_rays(t_game *game);
+int		is_wall(t_map *map, int x, int y);
 
 #endif
