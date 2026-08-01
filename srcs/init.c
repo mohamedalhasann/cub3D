@@ -30,3 +30,36 @@ int close_game(t_game *game)
 	exit(0);
 	return (0);
 }
+
+void init_direction(t_game *game, char dir)
+{    
+	
+	if (dir == 'N')
+    {
+        game->player.dir_x = 0.0;
+        game->player.dir_y = -1.0;
+        game->player.plane_y = 0.0;
+        game->player.plane_x = 0.66;
+    }
+    else if (dir == 'S')
+    {
+        game->player.dir_x = 0.0;
+        game->player.dir_y = 1.0;
+        game->player.plane_x = -0.66;
+        game->player.plane_y = 0.0;
+    }
+    else if (dir == 'E')
+    {
+		game->player.dir_y = 0.0;
+        game->player.dir_x = 1.0;
+        game->player.plane_y = 0.66;
+        game->player.plane_x = 0.0;
+    }
+    else if (dir == 'W')
+    {
+        game->player.dir_x = -1.0;
+        game->player.dir_y = 0.0;
+        game->player.plane_y = -0.66;
+        game->player.plane_x = 0.0;
+    }
+}

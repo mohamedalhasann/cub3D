@@ -66,6 +66,8 @@ typedef struct s_img
 
 typedef struct s_player
 {
+    int x;
+    int y;
     char in_map_spawn; // N,S,W,E from map
     double pos_x; // position on grid
     double pos_y; // same here

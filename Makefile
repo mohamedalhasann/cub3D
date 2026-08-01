@@ -17,6 +17,8 @@ CFLAGS		= -Wall -Wextra -Werror -I.
 
 SRC_DIR		= srcs
 OBJ_DIR		= obj
+LIBFT_DIR	= lib/libft
+LIBFT_LIB	= $(LIBFT_DIR)/libft.a
 
 SRC			= $(SRC_DIR)/main.c \
 			  $(SRC_DIR)/init.c \
@@ -30,11 +32,15 @@ OBJ			= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 MLX_DIR		= minilibx-linux
 MLX_LIB		= $(MLX_DIR)/libmlx.a
 MLX_FLAGS	= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
+LIBFT_FLAGS	= -L$(LIBFT_DIR) -lft
 
 all: $(NAME)
 
 $(MLX_LIB):
 	@make -C $(MLX_DIR) --silent
+
+$(LIBFT_LIB):
+	@make -C $(LIBFT_DIR) --silent
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	@mkdir -p $(dir $@)
@@ -43,17 +49,19 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
-$(NAME): $(OBJ) $(MLX_LIB)
-	$(CC) $(CFLAGS) $(OBJ) $(MLX_FLAGS) -o $(NAME)
+$(NAME): $(OBJ) $(MLX_LIB) $(LIBFT_LIB)
+	$(CC) $(CFLAGS) $(OBJ) $(MLX_FLAGS) $(LIBFT_FLAGS) -o $(NAME)
 
 clean:
 	@rm -rf $(OBJ_DIR)
 	@make -C $(MLX_DIR) clean --silent
-	@echo "object files cleaned."
+	@make -C $(LIBFT_DIR) clean --silent
+	@echo "object files cleaned"
 
 fclean: clean
 	@rm -f $(NAME)
-	@echo "full cleanup completed."
+	@make -C $(LIBFT_DIR) fclean --silent
+	@echo "full cleanup completed"
 
 re: fclean all
 
