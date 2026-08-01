@@ -107,25 +107,26 @@ typedef struct s_map
     char    *av;
     char    **fullmap;
     int     map_len;
-
-    char **grid;
-    int width;
-    int height;
-    int floor_color;
-    int ceiling_color;
-    char *north_path;
-    char *south_path;
-    char *west_path;
-    char *east_path;
+    int     isvalid;
+    char    **grid;
+    int     width;
+    int     height;
+    int     floor_color;
+    int     ceiling_color;
+    char    *north_path;
+    char    *south_path;
+    char    *west_path;
+    char    *east_path;
 
     int     file_len;
     char    *file_name;
     char    **file_content;
+    char    **tmp_map;
 
-    t_img north_image;
-    t_img west_image;
-    t_img east_image;
-    t_img south_image;
+    t_img   north_image;
+    t_img   west_image;
+    t_img   east_image;
+    t_img   south_image;
 }   t_map;
 
 typedef struct s_game
@@ -139,5 +140,9 @@ typedef struct s_game
 
 int check_map(t_game *game);
 int check_file(t_game *game);
-
+void get_txtr_paths(t_game *game);
+void get_map(t_game *game);
+int get_player_pos(t_game *game);
+void  duplicate_map(t_game *game);
+void flood_fill(t_game *game,int posx,int posy);
 #endif

@@ -80,11 +80,11 @@ int	main(int argc, char **argv)
 	game.map.av = argv[1];
 	game.map.map_len = game.map.file_len;
 	game.map.fullmap = game.map.file_content;
-
-	if (!check_file(&game))
-		return (1);
 	if (!check_map(&game))
+	{
+		printf("Error\n");
 		return (1);
+	}
 	return (0);
 }
 
