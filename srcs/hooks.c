@@ -20,7 +20,7 @@ int	is_wall(t_map *map, int x, int y)
 		return (1);
 	return (0);
 }
-static void rotate_player(t_player *p, double angle)
+static void rotate_player(t_player *p, double angle) // ??
 {
 	double old_dir_x;
 	double old_dir_y;

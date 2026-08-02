@@ -145,5 +145,7 @@ void	draw_floor_ceiling(t_game *game);
 int		render_frame(t_game *game);
 void	cast_all_rays(t_game *game);
 int		is_wall(t_map *map, int x, int y);
-
+void init_ray_direction(t_player *player, t_ray *ray ,int x);
+void init_dda_value(t_player *p, t_ray *ray);
+int shoot_rays(t_game *game,t_ray *ray);
 #endif
