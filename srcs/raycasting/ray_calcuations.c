@@ -15,7 +15,7 @@ void draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int
 	if (ray->side == 1)
 		color = 0x00FF00;
 	else
-		color = 0x3366FF;
+		color = 0x3366FF;	
 	y = draw_start;
 	while (y <= draw_end)
 	{

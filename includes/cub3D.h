@@ -149,4 +149,5 @@ void	init_dda_value(t_player *p, t_ray *ray);
 void	dda_algorithm(t_ray *ray, t_map *map);
 void	draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int x);
 void	shoot_rays(t_game *game);
+int		parse_map_file(t_game *game, const char *path);
 #endif

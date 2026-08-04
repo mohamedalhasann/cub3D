@@ -25,7 +25,8 @@ SRC			= $(SRC_DIR)/main.c \
 			  $(SRC_DIR)/hooks.c \
 			  $(SRC_DIR)/raycasting/dda_calculations.c \
 			  $(SRC_DIR)/raycasting/game_render.c \
-			  $(SRC_DIR)/raycasting/ray_calcuations.c
+			  $(SRC_DIR)/raycasting/ray_calcuations.c \
+			  $(SRC_DIR)/parsing/map_parser.c
 
 OBJ			= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 

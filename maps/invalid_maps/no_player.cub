@@ -1,0 +1,13 @@
+NO ./textures/wall.xpm
+SO ./textures/wall.xpm
+WE ./textures/wall.xpm
+EA ./textures/wall.xpm
+
+C 0,0,0
+F 42,42,42
+
+111111
+100001
+100001
+100001
+111111
