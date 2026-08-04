@@ -23,9 +23,9 @@ LIBFT_LIB	= $(LIBFT_DIR)/libft.a
 SRC			= $(SRC_DIR)/main.c \
 			  $(SRC_DIR)/init.c \
 			  $(SRC_DIR)/hooks.c \
-			  $(SRC_DIR)/raycasting/raycast.c \
-			  $(SRC_DIR)/render/game_loop.c \
-			  $(SRC_DIR)/render/render.c
+			  $(SRC_DIR)/raycasting/dda_calculations.c \
+			  $(SRC_DIR)/raycasting/game_render.c \
+			  $(SRC_DIR)/raycasting/ray_calcuations.c
 
 OBJ			= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 

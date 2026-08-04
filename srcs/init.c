@@ -12,6 +12,8 @@ void init_mlx(t_game *game)
 	game->win = mlx_new_window(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3D - Raycaster Engine");
 	if (!game->win)
 		print_error_message( "error \nwindow creation failed");	
+	game->frame.width = SCREEN_WIDTH;
+	game->frame.height = SCREEN_HEIGHT;
 	game->frame.image_ptr = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (!game->frame.image_ptr)
 		print_error_message( "error\nimage creation failed");	

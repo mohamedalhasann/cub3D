@@ -142,10 +142,11 @@ int		handle_keys(int keycode, t_game *game);
 
 void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
 void	draw_floor_ceiling(t_game *game);
-int		render_frame(t_game *game);
-void	cast_all_rays(t_game *game);
+int		render_frame(void *param);
 int		is_wall(t_map *map, int x, int y);
-void init_ray_direction(t_player *player, t_ray *ray ,int x);
-void init_dda_value(t_player *p, t_ray *ray);
-int shoot_rays(t_game *game,t_ray *ray);
+void	init_ray_direction(t_player *player, t_ray *ray ,int x);
+void	init_dda_value(t_player *p, t_ray *ray);
+void	dda_algorithm(t_ray *ray, t_map *map);
+void	draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int x);
+void	shoot_rays(t_game *game);
 #endif

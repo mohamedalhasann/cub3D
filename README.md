@@ -1,4 +1,14 @@
 
+the player is a single dot on the 2D map
+from that dot , we shoot out rays across the Field of View
+and the number of rays = SCREEN_WIDTH
+each ray travels forward until it hits a wall
+when it hits a wall, we measure how far away that wall is from the player
+the code use that distance to decide how tall to draw the wall's vertical line on the screen
+short distance = tall line on screen 
+long distance = short line on screen
+
+
 why do we need to shoot out rays?
 because the computer map is just a 2d grid of numbers. it has to figure out how far away every wall is from your eyes so it can draw them at the right height
 
@@ -22,3 +32,8 @@ if we use the camera plane : it would shoot out to your side
 
 so : the player's direction sets where you look , while the camera plane (pointing right / left) defines your horizontal screen baseline and its length sets the FOV angle
 by sweeping across this plane, we shoot rays forward to measure wall distances and render the screen as a 3d image pixel by pixel
+
+
+
+
+
