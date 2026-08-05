@@ -19,8 +19,8 @@ int get_player_pos(t_game *game)
 					if(!game->player.in_map_spawn) //checks for duplicates
 					{
 						game->player.in_map_spawn = game->map.grid[i][j]; 
-						game->player.x = ++i;
-						game->player.y = ++j;
+						game->player.x = i;
+						game->player.y = j;
 					}
 					else
 						return 0;
@@ -53,29 +53,34 @@ void  duplicate_map(t_game *game)
 			j = -1;
 			while (j++ < i)
 			{
-				free(game->map.tmp_map);
+				free(game->map.tmp_map[j]);
 			}
-			free(game->map.tmp_map);
+			free(game->map.tmp_map[j]);
 			return;
 		}
 		i++;
 	}
-	game->map.tmp_map = NULL;
+	game->map.tmp_map[i] = NULL;
 }
-void flood_fill(t_game *game,int posx,int posy)
+void floodfill_player(t_game *game, int posx, int posy)
 {
-	if (game->player.x < 0 || game->player.y < 0 
-		|| game->player.x >= game->map.height || game->player.y >= game->map.width)
-    	{
-			game->map.isvalid = 1;
-			return ;
-		}
-	if (game->map.tmp_map[posx][posy] == '1' || game->map.tmp_map[posx][posy] == '*' 
-		|| game->map.tmp_map[posx][posy] == '\0' || game->map.tmp_map[posx][posy] == '\n')
+	if (posx < 0 || posy < 0
+		|| posx >= game->map.height || (posy >=(int) ft_strlen(game->map.tmp_map[posx])))
+	{
+		game->map.isvalid = 1;
 		return ;
+	}
+	if (game->map.tmp_map[posx][posy] == '1' || game->map.tmp_map[posx][posy] == '*'
+		|| game->map.tmp_map[posx][posy] == '\0' )
+		return ;
+	if( game->map.tmp_map[posx][posy] == ' ' ||  game->map.tmp_map[posx][posy] == '\n')
+	{
+		game->map.isvalid = 1;
+		return ;
+	}
 	game->map.tmp_map[posx][posy] = '*';
-	flood_fill(game->map.tmp_map[posx][posy], posx + 1, posy);
-	flood_fill(game->map.tmp_map[posx][posy], posx - 1, posy);
-	flood_fill(game->map.tmp_map[posx][posy], posx, posy + 1);
-	flood_fill(game->map.tmp_map[posx][posy], posx, posy - 1);
+	floodfill_player(game, posx + 1, posy);
+	floodfill_player(game, posx - 1, posy);
+	floodfill_player(game, posx, posy + 1);
+	floodfill_player(game, posx, posy - 1);
 }

@@ -60,8 +60,8 @@ typedef struct s_img
 
 typedef struct s_player
 {
-    double x;
-    double y;
+    int x;
+    int y;
     char in_map_spawn; // N,S,W,E from map
     double pos_x; // position on grid
     double pos_y; // same here
@@ -144,5 +144,5 @@ void get_txtr_paths(t_game *game);
 void get_map(t_game *game);
 int get_player_pos(t_game *game);
 void  duplicate_map(t_game *game);
-void flood_fill(t_game *game,int posx,int posy);
+void floodfill_player(t_game *game,int posx,int posy);
 #endif
