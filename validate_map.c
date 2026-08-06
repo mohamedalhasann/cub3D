@@ -1,86 +1,91 @@
 #include "includes/cub3D.h"
 
-int get_player_pos(t_game *game)
+void	fill_updown(char **padded, int last_row, int width)
+{
+	int	z;
+
+	z = 0;
+	while (z < width + 2)
+	{
+		padded[0][z] = 'X';
+		padded[last_row][z] = 'X';
+		z++;
+	}
+	padded[0][z] = '\0';
+	padded[last_row][z] = '\0';
+}
+
+int allocate_padded(t_game *game)
 {
 	int i;
-	int j;
-	int max_j;
 
 	i = 0;
-	max_j = 0;
-	while(game->map.grid[i])
+	game->map.padded = malloc(sizeof(char *) * (game->map.height + 3));
+	if (!game->map.padded)
+		return (0);
+
+	i = 0;
+	while (i < game->map.height + 2)
 	{
-		j = 0;
-		while(game->map.grid[i][j])
-		{
-			if(game->map.grid[i][j] == 'N' || game->map.grid[i][j] == 'S'
-				|| game->map.grid[i][j]== 'E' || game->map.grid[i][j] == 'W')
-				{
-					if(!game->player.in_map_spawn) //checks for duplicates
-					{
-						game->player.in_map_spawn = game->map.grid[i][j]; 
-						game->player.x = i;
-						game->player.y = j;
-					}
-					else
-						return 0;
-				}
-				j++;
-				if(j > max_j)
-					max_j = j;	
-		}
+		game->map.padded[i] = malloc(sizeof(char) * (game->map.width + 3));
+		if (!game->map.padded[i])
+			return (0);
 		i++;
 	}
-	game->map.height = i;
-	game->map.width = max_j;
-	printf("max j: %i\n",max_j);
+	game->map.padded[i] = NULL;
 	return 1;
 }
-void  duplicate_map(t_game *game)
-{
-	int		i;
-	int		j;
 
-	game->map.tmp_map = malloc((game->map.height + 1) * sizeof(char *));
-	if (!game->map.tmp_map)
-		return ;
-	i = 0;
+char	**map_padding(t_game *game,int i,int j,int y,int z)
+{
+	if(!allocate_padded(game))
+		return NULL;
+	fill_updown(game->map.padded, game->map.height + 1, game->map.width);
 	while (game->map.grid[i])
 	{
-		game->map.tmp_map[i] = ft_strdup(game->map.grid[i]);
-		if (game->map.grid[i] == NULL)
+		game->map.padded[y][0] = 'X';
+		j = 0;
+		z = 1;
+		while (game->map.grid[i][j])
 		{
-			j = -1;
-			while (j++ < i)
-			{
-				free(game->map.tmp_map[j]);
-			}
-			free(game->map.tmp_map[j]);
-			return;
+			if (game->map.grid[i][j] == ' ')
+				game->map.padded[y][z] = 'X';
+			else
+				game->map.padded[y][z] = game->map.grid[i][j];
+			j++;
+			z++;
 		}
+		while (z < game->map.width + 2)
+			game->map.padded[y][z++] = 'X';
+		game->map.padded[y][z] = '\0';
 		i++;
+		y++;
 	}
-	game->map.tmp_map[i] = NULL;
+	return (game->map.padded);
 }
-void floodfill_player(t_game *game, int posx, int posy)
+
+void floodfill_all(t_game *game,int posx,int posy,char **padded_map)
 {
 	if (posx < 0 || posy < 0
-		|| posx >= game->map.height || (posy >=(int) ft_strlen(game->map.tmp_map[posx])))
+    	|| posx >= game->map.width + 2
+    	|| posy >= game->map.height + 2)
+	    return;
+	if (padded_map[posy][posx] == 'V' || padded_map[posy][posx] == '1')
+		return ;
+	if (padded_map[posy][posx] == '0'
+		|| padded_map[posy][posx] == 'N'
+		|| padded_map[posy][posx] == 'S'
+		|| padded_map[posy][posx] == 'E'
+		|| padded_map[posy][posx] == 'W')
 	{
 		game->map.isvalid = 1;
 		return ;
 	}
-	if (game->map.tmp_map[posx][posy] == '1' || game->map.tmp_map[posx][posy] == '*'
-		|| game->map.tmp_map[posx][posy] == '\0' )
+	if (padded_map[posy][posx] != 'X')
 		return ;
-	if( game->map.tmp_map[posx][posy] == ' ' ||  game->map.tmp_map[posx][posy] == '\n')
-	{
-		game->map.isvalid = 1;
-		return ;
-	}
-	game->map.tmp_map[posx][posy] = '*';
-	floodfill_player(game, posx + 1, posy);
-	floodfill_player(game, posx - 1, posy);
-	floodfill_player(game, posx, posy + 1);
-	floodfill_player(game, posx, posy - 1);
+	padded_map[posy][posx] = 'V';
+	floodfill_all(game, posx + 1, posy,padded_map);
+	floodfill_all(game, posx - 1, posy,padded_map);
+	floodfill_all(game, posx, posy + 1,padded_map);
+	floodfill_all(game, posx, posy - 1,padded_map);
 }

@@ -104,10 +104,7 @@ typedef struct s_ray
 
 typedef struct s_map
 {
-    char    *av;
-    char    **fullmap;
-    int     map_len;
-    int     isvalid;
+    
     char    **grid;
     int     width;
     int     height;
@@ -117,11 +114,16 @@ typedef struct s_map
     char    *south_path;
     char    *west_path;
     char    *east_path;
-
+    
+    char    *av;
+    char    **fullmap;
+    int     map_len;
+    int     isvalid;
     int     file_len;
     char    *file_name;
     char    **file_content;
     char    **tmp_map;
+    char	**padded;
 
     t_img   north_image;
     t_img   west_image;
@@ -142,7 +144,12 @@ int check_map(t_game *game);
 int check_file(t_game *game);
 void get_txtr_paths(t_game *game);
 void get_map(t_game *game);
-int get_player_pos(t_game *game);
+int get_player_pos(t_game *game,int i,int j,int max_j);
 void  duplicate_map(t_game *game);
 void floodfill_player(t_game *game,int posx,int posy);
+void floodfill_all(t_game *game,int posx,int posy,char **padded_map);
+void  duplicate_map(t_game *game);
+int get_player_pos(t_game *game,int i,int j,int max_j);
+char	**map_padding(t_game *game,int i,int j,int y,int z);
+
 #endif

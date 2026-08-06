@@ -89,3 +89,7 @@ int	main(int argc, char **argv)
 }
 
 //gnl has an issue when file is empty
+
+/*
+cc -Wall -Werror -Wextra checker.c main.c includes/cub3D.h lib/gnl/srcs/get_next_line.c lib/gnl/srcs/get_next_line.h lib/gnl/srcs/get_next_line_utils.c lib/libft/ft_strdup.c lib/libft/ft_strncmp.c validate_map.c get_values.c lib/libft/ft_isdigit.c lib/libft/ft_isalpha.c parse_player.c
+*/
