@@ -1,11 +1,5 @@
 #include "../../includes/cub3D.h"
 
-void init_ray_direction(t_player *player, t_ray *ray, int x)
-{
-	ray->camera_x = 2.0 * x / (double)SCREEN_WIDTH - 1.0;
-	ray->ray_x = player->dir_x + player->plane_x * ray->camera_x;
-	ray->ray_y = player->dir_y + player->plane_y * ray->camera_x;
-}
 
 void draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int x)
 {

@@ -1,4 +1,4 @@
-#include "../includes/cub3D.h"
+#include "../../includes/cub3D.h"
 
 static int	row_len(const char *row)
 {
@@ -49,8 +49,9 @@ static void try_move(t_game *game, double dx, double dy)
 
 int handle_keys(int keycode, t_game *game)
 {
-	t_player *p = &game->player;
-
+	t_player *p;
+	
+	p = &game->player;
 	if (keycode == KEY_ESC)
 		close_game(game);
 	if (keycode == KEY_W)

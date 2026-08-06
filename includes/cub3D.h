@@ -139,7 +139,7 @@ typedef struct s_game
 void	init_mlx(t_game *game);
 int		close_game(t_game *game);
 int		handle_keys(int keycode, t_game *game);
-
+void    print_error_message(char *message);
 void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
 void	draw_floor_ceiling(t_game *game);
 int		render_frame(void *param);

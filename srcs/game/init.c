@@ -1,15 +1,11 @@
-#include "../includes/cub3D.h"
-static void print_error_message(char *message)
-{
-	ft_putendl_fd(message, 2);
-	exit (1);
-}
+#include "../../includes/cub3D.h"
+
 void init_mlx(t_game *game)
 {
 	game->mlx = mlx_init();
 	if (!game->mlx)
 		print_error_message("error \nmlx init failed");
-	game->win = mlx_new_window(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3D - Raycaster Engine");
+	game->win = mlx_new_window(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3D");
 	if (!game->win)
 		print_error_message( "error \nwindow creation failed");	
 	game->frame.width = SCREEN_WIDTH;
@@ -23,19 +19,8 @@ void init_mlx(t_game *game)
 		print_error_message("error\nframe address creation failed");
 }
 
-int close_game(t_game *game)
-{
-	if (game->frame.image_ptr)
-		mlx_destroy_image(game->mlx, game->frame.image_ptr);
-	if (game->win)
-		mlx_destroy_window(game->mlx, game->win);
-	exit(0);
-	return (0);
-}
-
 void init_direction(t_game *game, char dir)
 {    
-	
 	if (dir == 'N')
     {
         game->player.dir_x = 0.0;
@@ -64,4 +49,10 @@ void init_direction(t_game *game, char dir)
         game->player.plane_y = -0.66;
         game->player.plane_x = 0.0;
     }
+}
+void init_ray_direction(t_player *player, t_ray *ray, int x)
+{
+	ray->camera_x = 2.0 * x / (double)SCREEN_WIDTH - 1.0;
+	ray->ray_x = player->dir_x + player->plane_x * ray->camera_x;
+	ray->ray_y = player->dir_y + player->plane_y * ray->camera_x;
 }

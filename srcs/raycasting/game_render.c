@@ -14,7 +14,7 @@ void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
 	dst[2] = (char)((col >> 16) & 0xFF);
 }
 
-void	draw_floor_ceiling(t_game *game)
+void	draw_floor_ceiling(t_game *game)// background for the scene
 {
 	int	x;
 	int	y;
@@ -35,11 +35,11 @@ void	draw_floor_ceiling(t_game *game)
 	}
 }
 
-int	render_frame(void *param)
+int	render_frame(void *param)// repeatedly called by minilibx
 {
 	t_game	*game;
 
-	game = (t_game *)param;
+	game = (t_game *)param;	
 	draw_floor_ceiling(game);
 	shoot_rays(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->frame.image_ptr, 0, 0);
