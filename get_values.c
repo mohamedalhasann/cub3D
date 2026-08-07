@@ -58,7 +58,7 @@ void fill_map(int i,t_game *game)
 		grid_size++;
 		y++;
 	}
-	game->map.grid = malloc(grid_size * sizeof(char *));
+	game->map.grid = malloc((grid_size + 1) * sizeof(char *));
 	if(!game->map.grid)
 		return;
 	while(game->map.file_content[i] && !is_empty(game->map.file_content[i]))
