@@ -34,31 +34,34 @@ int get_player_pos(t_game *game,int i,int j,int max_j)
 	return 1;
 }
 
-void  duplicate_map(t_game *game)
+int	duplicate_map(t_game *game)
 {
 	int		i;
 	int		j;
 
 	game->map.tmp_map = malloc((game->map.height + 1) * sizeof(char *));
 	if (!game->map.tmp_map)
-		return ;
+		return (0);
 	i = 0;
 	while (game->map.grid[i])
 	{
 		game->map.tmp_map[i] = ft_strdup(game->map.grid[i]);
-		if (game->map.grid[i] == NULL)
+		if (game->map.tmp_map[i] == NULL)
 		{
-			j = -1;
-			while (j++ < i)
+			j = 0;
+			while (j < i)
 			{
 				free(game->map.tmp_map[j]);
+				j++;
 			}
-			free(game->map.tmp_map[j]);
-			return;
+			free(game->map.tmp_map);
+			game->map.tmp_map = NULL;
+			return (0);
 		}
 		i++;
 	}
 	game->map.tmp_map[i] = NULL;
+	return (1);
 }
 
 void floodfill_player(t_game *game, int posx, int posy)

@@ -145,10 +145,9 @@ int check_file(t_game *game);
 void get_txtr_paths(t_game *game);
 void get_map(t_game *game);
 int get_player_pos(t_game *game,int i,int j,int max_j);
-void  duplicate_map(t_game *game);
+int  duplicate_map(t_game *game);
 void floodfill_player(t_game *game,int posx,int posy);
 void floodfill_all(t_game *game,int posx,int posy,char **padded_map);
-void  duplicate_map(t_game *game);
 int get_player_pos(t_game *game,int i,int j,int max_j);
 char	**map_padding(t_game *game,int i,int j,int y,int z);
 

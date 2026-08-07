@@ -51,7 +51,8 @@ int check_map(t_game *game)
 		return 0;
 	if(!get_player_pos(game,0,0,0))
 		return 0;
-	duplicate_map(game);
+	if (!duplicate_map(game))
+		return 0;
 	floodfill_player(game,game->player.x,game->player.y);
 	// print_map(map_padding(game));
 	floodfill_all(game,0,0,map_padding(game,0,0,1,0));
