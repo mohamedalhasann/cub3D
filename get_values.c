@@ -3,7 +3,7 @@
 void get_path(char **path_required,char *line)
 {
 	int i = 0;
-	while(line[i] != '.')
+	while(line[i] && line[i] != '.')
 		i++;
 	if(line[i] == '.' && line[i + 1] == '/')
 		*path_required = ft_strdup(line + i);

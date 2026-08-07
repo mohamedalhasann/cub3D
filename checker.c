@@ -2,25 +2,17 @@
 
 int	check_ext(char *filename)
 {
-	char	*arr;
 	int		len;
-	int		i;
 
-	arr = "buc.";
 	len = ft_strlen(filename);
-	i = 0;
-	while (len > 3 && i < 4)
+	if (len < 4
+		|| filename[len - 4] != '.'
+		|| filename[len - 3] != 'c'
+		|| filename[len - 2] != 'u'
+		|| filename[len - 1] != 'b')
 	{
-		if (filename[len - 1] != arr[i])
-		{
-            printf("wrong map extention!\n");
-            return (0);
-        }
-		else
-		{
-			i++;
-			len--;
-		}
+		printf("wrong map extention!\n");
+		return (0);
 	}
 	return (1);
 }
@@ -73,4 +65,3 @@ int check_map(t_game *game)
 	printf("player pos x = %i, y = %i\n",game->player.x,game->player.y);
 	return 1;
 }
-
