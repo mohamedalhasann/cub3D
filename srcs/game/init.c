@@ -52,6 +52,9 @@ void init_direction(t_game *game, char dir)
 }
 void init_ray_direction(t_player *player, t_ray *ray, int x)
 {
+    // camera_x maps the screen column from 0 to screen width into about -1,1
+    // camera_x is the horizontal position of the ray inside the player's field of view, it exists because one ray is not enough, you need many rays , one for each screen column and each column must point a little differently
+
 	ray->camera_x = 2.0 * x / (double)SCREEN_WIDTH - 1.0;
 	ray->ray_x = player->dir_x + player->plane_x * ray->camera_x;
 	ray->ray_y = player->dir_y + player->plane_y * ray->camera_x;

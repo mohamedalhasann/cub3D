@@ -24,6 +24,7 @@ SRC			= $(SRC_DIR)/main.c \
 			  $(SRC_DIR)/game/init.c \
 			  $(SRC_DIR)/game/hooks.c \
 			  $(SRC_DIR)/game/assets.c \
+			  $(SRC_DIR)/game/textures.c \
 			  $(SRC_DIR)/raycasting/dda_calculations.c \
 			  $(SRC_DIR)/raycasting/game_render.c \
 			  $(SRC_DIR)/raycasting/ray_calcuations.c \

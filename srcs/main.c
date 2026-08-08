@@ -15,6 +15,7 @@ int main(int argc, char **argv)
 		return (1);
 	}
 	init_mlx(&game);
+	load_game_textures(&game);
 	mlx_hook(game.win, ON_KEYDOWN, 1L << 0, handle_keys, &game);
 	mlx_hook(game.win, ON_DESTROY, 0, close_game, &game);
 	mlx_loop_hook(game.mlx, render_frame, &game);

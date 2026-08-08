@@ -1,6 +1,120 @@
 #define _GNU_SOURCE
 #include "../../includes/cub3D.h"
 
+static char *skip_spaces(const char *str)
+{
+	while (*str == ' ' || *str == '\t')
+		str++;
+	return ((char *)str);
+}
+
+static void free_string_array(char **array)
+{
+	int i;
+
+	i = 0;
+	if (!array)
+		return ;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+static int parse_rgb_color(const char *line, int *color)
+{
+	long	values[3];
+	int		i;
+	char	*end;
+
+	i = 0;
+	while (i < 3)
+	{
+		line = skip_spaces(line);
+		if (!ft_isdigit((unsigned char)*line))
+			return (0);
+		values[i] = strtol(line, &end, 10);
+		if (end == line || values[i] < 0 || values[i] > 255)
+			return (0);
+		line = end;
+		line = skip_spaces(line);
+		if (i < 2)
+		{
+			if (*line != ',')
+				return (0);
+			line++;
+		}
+		i++;
+	}
+	line = skip_spaces(line);
+	if (*line != '\0')
+		return (0);
+	*color = ((int)values[0] << 16) | ((int)values[1] << 8) | (int)values[2];
+	return (1);
+}
+
+static int set_texture_path(char **dest, const char *line)
+{
+	char	*path;
+
+	if (*dest)
+		return (0);
+	path = ft_strdup(skip_spaces(line));
+	if (!path)
+		return (0);
+	*dest = path;
+	return (1);
+}
+
+static int parse_header_line(t_game *game, const char *line, t_parse_data *header)
+{
+	if (ft_strncmp(line, "NO ", 3) == 0)
+	{
+		if (header->north_flag)
+			return (0);
+		header->north_flag = 1;
+		return (set_texture_path(&game->map.north_path, line + 3));
+	}
+	if (ft_strncmp(line, "SO ", 3) == 0)
+	{
+		if (header->south_flag)
+			return (0);
+		header->south_flag = 1;
+		return (set_texture_path(&game->map.south_path, line + 3));
+	}
+	if (ft_strncmp(line, "WE ", 3) == 0)
+	{
+		if (header->west_flag)
+			return (0);
+		header->west_flag = 1;
+		return (set_texture_path(&game->map.west_path, line + 3));
+	}
+	if (ft_strncmp(line, "EA ", 3) == 0)
+	{
+		if (header->east_flag)
+			return (0);
+		header->east_flag = 1;
+		return (set_texture_path(&game->map.east_path, line + 3));
+	}
+	if (ft_strncmp(line, "F ", 2) == 0)
+	{
+		if (header->floor_color_flag)
+			return (0);
+		header->floor_color_flag = 1;
+		return (parse_rgb_color(line + 2, &game->map.floor_color));
+	}
+	if (ft_strncmp(line, "C ", 2) == 0)
+	{
+		if (header->ceiling_color_flag)
+			return (0);
+		header->ceiling_color_flag = 1;
+		return (parse_rgb_color(line + 2, &game->map.ceiling_color));
+	}
+	return (-1);
+}
+
 static int is_header_line(const char *line)
 {
 	return (ft_strncmp(line, "NO ", 3) == 0
@@ -142,7 +256,9 @@ static int validate_and_fill_map(t_game *game, char **lines, int count)
 	int map_count;
 	char **map_lines;
 	char spawn_dir;
+	t_parse_data header;
 
+	ft_memset(&header, 0, sizeof(header));
 	player_count = 0;
 	max_width = 0;
 	map_started = 0;
@@ -156,24 +272,40 @@ static int validate_and_fill_map(t_game *game, char **lines, int count)
 	{
 		if (!map_started)
 		{
-			if (!is_header_line(lines[i]))
-				map_started = 1;
-			else
+			j = parse_header_line(game, lines[i], &header);
+			if (j == 1)
 			{
 				i++;
 				continue ;
 			}
+			if (j == 0)
+			{
+				free_string_array(map_lines);
+				return (0);
+			}
+			map_started = 1;
 		}
 		if (map_started)
 		{
+			if (is_header_line(lines[i]))
+			{
+				free_string_array(map_lines);
+				return (0);
+			}
 			row_len = (int)ft_strlen(lines[i]);
 			if (row_len == 0)
+			{
+				free_string_array(map_lines);
 				return (0);
+			}
 			j = 0;
 			while (j < row_len)
 			{
 				if (!is_valid_map_char(lines[i][j]))
+				{
+					free_string_array(map_lines);
 					return (0);
+				}
 				if (lines[i][j] == 'N' || lines[i][j] == 'S'
 					|| lines[i][j] == 'E' || lines[i][j] == 'W')
 				{
@@ -189,18 +321,24 @@ static int validate_and_fill_map(t_game *game, char **lines, int count)
 				max_width = row_len;
 			map_lines[map_count] = ft_strdup(lines[i]);
 			if (!map_lines[map_count])
+			{
+				free_string_array(map_lines);
 				return (0);
+			}
 			map_count++;
 		}
 		i++;
 	}
-	if (player_count != 1)
+	if (player_count != 1 || !header.north_flag || !header.south_flag
+		|| !header.west_flag || !header.east_flag || !header.floor_color_flag
+		|| !header.ceiling_color_flag)
+	{
+		free_string_array(map_lines);
 		return (0);
+	}
 	game->map.grid = map_lines;
 	game->map.height = map_count;
 	game->map.width = max_width;
-	game->map.floor_color = 0x333333;
-	game->map.ceiling_color = 0x66CCFF;
 	game->player.in_map_spawn = spawn_dir;
 	set_player_direction(game, spawn_dir);
 	game->player.move_speed = 0.05;
@@ -217,6 +355,7 @@ static int validate_and_fill_map(t_game *game, char **lines, int count)
 		map_lines[i][j] = '\0';
 		i++;
 	}
+	free_string_array(lines);
 	return (1);
 }
 

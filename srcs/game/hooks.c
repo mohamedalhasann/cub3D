@@ -59,9 +59,9 @@ int handle_keys(int keycode, t_game *game)
 	if (keycode == KEY_S)
 		try_move(game, -p->dir_x * p->move_speed, -p->dir_y * p->move_speed);
 	if (keycode == KEY_A)
-		try_move(game, -p->dir_y * p->move_speed, p->dir_x * p->move_speed);
+		try_move(game, p->dir_y * p->move_speed, p->dir_x * p->move_speed);
 	if (keycode == KEY_D)
-		try_move(game, p->dir_y * p->move_speed, -p->dir_x * p->move_speed);
+		try_move(game, -p->dir_y * p->move_speed, -p->dir_x * p->move_speed);
 	if (keycode == KEY_LEFT)
 		rotate_player(p, -p->rot_speed);
 	if (keycode == KEY_RIGHT)

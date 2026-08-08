@@ -37,3 +37,14 @@ by sweeping across this plane, we shoot rays forward to measure wall distances a
 
 
 
+
+
+
+
+
+
+8/8:
+cub3d is basically a 2d map that gets turned into a 3d-looking view using raycasting
+
+
+
