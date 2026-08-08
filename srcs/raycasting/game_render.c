@@ -35,7 +35,7 @@ void	draw_floor_ceiling(t_game *game)// background for the scene
 	}
 }
 
-int	render_frame(void *param)// repeatedly called by minilibx
+int	render_game(void *param)// repeatedly called by minilibx
 {
 	t_game	*game;
 
@@ -45,3 +45,4 @@ int	render_frame(void *param)// repeatedly called by minilibx
 	mlx_put_image_to_window(game->mlx, game->win, game->frame.image_ptr, 0, 0);
 	return (0);
 }
+ 

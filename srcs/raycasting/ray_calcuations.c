@@ -34,11 +34,7 @@ void draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int
 	int			color;
 	int			y;
 	double		wall_x;
-	double		step;
-	double		texture_position;
 	t_img		*texture;
-	int			texture_x;
-	int			texture_y;
 
 	get_wall_texture(game, ray, &texture);
 	if (!texture || !texture->address || texture->width <= 0 || texture->height <= 0)
@@ -48,22 +44,22 @@ void draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int
 	else
 		wall_x = game->player.pos_x + ray->perp_wall_dist * ray->ray_x;
 	wall_x -= floor(wall_x);
-	texture_x = (int)(wall_x * (double)texture->width);
+	ray->texture_x = (int)(wall_x * (double)texture->width);
 	if ((ray->side == 0 && ray->ray_x > 0) || (ray->side == 1 && ray->ray_y < 0))
-		texture_x = texture->width - texture_x - 1;
-	step = (double)texture->height / (double)ray->line_height;
-	texture_position = (draw_start - SCREEN_HEIGHT / 2 + ray->line_height / 2) * step;
+		ray->texture_x = texture->width - ray->texture_x - 1;
+	ray->step = (double)texture->height / (double)ray->line_height;
+	ray->texture_position = (draw_start - SCREEN_HEIGHT / 2 + ray->line_height / 2) * ray->step;
 	y = draw_start;
 	while (y <= draw_end)
 	{
-		texture_y = (int)texture_position;
-		if (texture_y < 0)
-			texture_y = 0;
-		else if (texture_y >= texture->height)
-			texture_y = texture->height - 1;
-		color = (int)get_texture_color(texture, texture_x, texture_y);
+		ray->texture_y = (int)ray->texture_position;
+		if (ray->texture_y < 0)
+			ray->texture_y = 0;
+		else if (ray->texture_y >= texture->height)
+			ray->texture_y = texture->height - 1;
+		color = (int)get_texture_color(texture, ray->texture_x, ray->texture_y);
 		my_mlx_pixel_put(&game->frame, x, y, color);
-		texture_position += step;
+		ray->texture_position += ray->step;
 		y++;
 	}
 }
@@ -80,7 +76,7 @@ void	shoot_rays(t_game *game)
 	while (width_x < SCREEN_WIDTH)
 	{
 		init_ray_direction(&game->player, &ray, width_x);
-		init_dda_value(&game->player, &ray);
+		calculate_distance(&game->player, &ray);
 		dda_algorithm(&ray, &game->map);
 		if (ray.perp_wall_dist <= 0.0001)
 			ray.perp_wall_dist = 0.0001;

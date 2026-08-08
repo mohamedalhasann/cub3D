@@ -37,14 +37,15 @@ static void rotate_player(t_player *p, double angle) // ??
 	p->plane_y = old_plane_x * sin(angle) + old_plane_y * cos(angle);
 }
 
-static void try_move(t_game *game, double dx, double dy)
+static void move_player(t_game *game, double dx, double dy)
 {
-	t_player *p = &game->player;
-
-	if (!is_wall(&game->map, (int)(p->pos_x + dx), (int)p->pos_y))
-		p->pos_x += dx;
-	if (!is_wall(&game->map, (int)p->pos_x, (int)(p->pos_y + dy)))
-		p->pos_y += dy;
+	t_player *player;
+	
+	player = &game->player;
+	if (!is_wall(&game->map, (int)(player->pos_x + dx), (int)player->pos_y))
+		player->pos_x += dx;
+	if (!is_wall(&game->map, (int)player->pos_x, (int)(player->pos_y + dy)))
+		player->pos_y += dy;
 }
 
 int handle_keys(int keycode, t_game *game)
@@ -55,13 +56,13 @@ int handle_keys(int keycode, t_game *game)
 	if (keycode == KEY_ESC)
 		close_game(game);
 	if (keycode == KEY_W)
-		try_move(game, p->dir_x * p->move_speed, p->dir_y * p->move_speed);
+		move_player(game, p->dir_x * p->move_speed, p->dir_y * p->move_speed);
 	if (keycode == KEY_S)
-		try_move(game, -p->dir_x * p->move_speed, -p->dir_y * p->move_speed);
+		move_player(game, -p->dir_x * p->move_speed, -p->dir_y * p->move_speed);
 	if (keycode == KEY_A)
-		try_move(game, p->dir_y * p->move_speed, p->dir_x * p->move_speed);
+		move_player(game, p->dir_y * p->move_speed, p->dir_x * p->move_speed);
 	if (keycode == KEY_D)
-		try_move(game, -p->dir_y * p->move_speed, -p->dir_x * p->move_speed);
+		move_player(game, -p->dir_y * p->move_speed, -p->dir_x * p->move_speed);
 	if (keycode == KEY_LEFT)
 		rotate_player(p, -p->rot_speed);
 	if (keycode == KEY_RIGHT)

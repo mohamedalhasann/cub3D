@@ -53,8 +53,9 @@ int close_game(t_game *game)
 	exit(0);
 	return (0);
 }
-void print_error_message(char *message)
+void print_error_message(t_game *game,char *message)
 {
+	(void)game;
 	ft_putendl_fd(message, 2);
 	exit (1);
 }

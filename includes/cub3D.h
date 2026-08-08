@@ -139,15 +139,15 @@ typedef struct s_game
 void	init_mlx(t_game *game);
 int		close_game(t_game *game);
 int		handle_keys(int keycode, t_game *game);
-void    print_error_message(char *message);
+void    print_error_message(t_game *game,char *message);
 void	load_game_textures(t_game *game);
 void	destroy_game_textures(t_game *game);
 void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
 void	draw_floor_ceiling(t_game *game);
-int		render_frame(void *param);
+int		render_game(void *param);
 int		is_wall(t_map *map, int x, int y);
 void	init_ray_direction(t_player *player, t_ray *ray ,int x);
-void	init_dda_value(t_player *p, t_ray *ray);
+void	calculate_distance(t_player *p, t_ray *ray);
 void	dda_algorithm(t_ray *ray, t_map *map);
 unsigned int	get_texture_color(t_img *texture, int x, int y);
 void		get_wall_texture(t_game *game, t_ray *ray, t_img **texture);
