@@ -1,0 +1,12 @@
+1. invalid map characters are accepted!!
+2. check floodfill_player(), what if there is anything that is not 1,*,null,space,newline? 
+
+3.floor and ceiling parsing is missing
+4.get_path() only accepts paths that contain ./ , i think this is wrong
+5.many allocation failures are not handled properly:
+{
+1. in flood_fillall, what if map_padding failed?
+2. allocate_padded() returns immediately without freeing the earlier allocations
+3.fill_map() doesnt handle ft_strdup failure
+4. 
+}
