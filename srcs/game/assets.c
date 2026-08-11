@@ -39,8 +39,10 @@ static void free_game_map(t_game *game)
 	game->map.east_path = NULL;
 }
 
-int close_game(t_game *game)
+static void cleanup_game(t_game *game)
 {
+	if (!game)
+		return ;
 	destroy_texture(game, &game->map.north_image);
 	destroy_texture(game, &game->map.south_image);
 	destroy_texture(game, &game->map.west_image);
@@ -49,13 +51,19 @@ int close_game(t_game *game)
 		mlx_destroy_image(game->mlx, game->frame.image_ptr);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
-	free_game_map(game);
+	free_game_map(game);	
+}
+
+int close_game(t_game *game)
+{
+	cleanup_game(game);
 	exit(0);
 	return (0);
 }
-void print_error_message(t_game *game,char *message)
+
+void print_error_message(t_game *game, char *message)
 {
-	(void)game;
 	ft_putendl_fd(message, 2);
+	cleanup_game(game);
 	exit (1);
 }
