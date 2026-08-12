@@ -1,17 +1,16 @@
 #include "../../includes/cub3D.h"
 
-void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
+void	my_mlx_pixel_put(mlx_image_t *img, int x, int y, unsigned int color)
 {
-	char	*dst;
-	unsigned int	col;
+	unsigned char	*pixel;
 
-	if (x < 0 || y < 0 || x >= img->width || y >= img->height)
+	if (x < 0 || y < 0 || x >= (int)img->width || y >= (int)img->height)
 		return ;
-	dst = img->address + (y * img->len) + (x * (img->bpp / 8));
-	col = (unsigned int)color;
-	dst[0] = (char)(col & 0xFF);
-	dst[1] = (char)((col >> 8) & 0xFF);
-	dst[2] = (char)((col >> 16) & 0xFF);
+	pixel = img->pixels + ((y * img->width + x) * 4);
+	pixel[0] = (unsigned char)(color >> 24);
+	pixel[1] = (unsigned char)(color >> 16);
+	pixel[2] = (unsigned char)(color >> 8);
+	pixel[3] = (unsigned char)color;
 }
 
 void	draw_floor_ceiling(t_game *game)// background for the scene
@@ -26,23 +25,23 @@ void	draw_floor_ceiling(t_game *game)// background for the scene
 		while (x < SCREEN_WIDTH)
 		{
 			if (y < SCREEN_HEIGHT / 2)
-				my_mlx_pixel_put(&game->frame, x, y, game->map.ceiling_color);
+				my_mlx_pixel_put(game->frame, x, y,
+					(unsigned int)game->map.ceiling_color << 8 | 0xFF);
 			else
-				my_mlx_pixel_put(&game->frame, x, y, game->map.floor_color);
+				my_mlx_pixel_put(game->frame, x, y,
+					(unsigned int)game->map.floor_color << 8 | 0xFF);
 			x++;
 		}
 		y++;
 	}
 }
 
-int	render_game(void *param)// repeatedly called by minilibx
+void	render_game(void *param)
 {
 	t_game	*game;
 
-	game = (t_game *)param;	
+	game = (t_game *)param;
+	hooks_handler(game);
 	draw_floor_ceiling(game);
 	shoot_rays(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->frame.image_ptr, 0, 0);
-	return (0);
 }
- 

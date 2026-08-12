@@ -48,24 +48,28 @@ static void move_player(t_game *game, double dx, double dy)
 		player->pos_y += dy;
 }
 
-int handle_keys(int keycode, t_game *game)
+void hooks_handler(void *param)
 {
+	t_game		*game;
 	t_player *p;
 	
+	game = (t_game *)param;
 	p = &game->player;
-	if (keycode == KEY_ESC)
-		close_game(game);
-	if (keycode == KEY_W)
+	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
+	{
+		mlx_close_window(game->mlx);
+		return ;
+	}
+	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
 		move_player(game, p->dir_x * p->move_speed, p->dir_y * p->move_speed);
-	if (keycode == KEY_S)
+	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
 		move_player(game, -p->dir_x * p->move_speed, -p->dir_y * p->move_speed);
-	if (keycode == KEY_A)
+	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
 		move_player(game, p->dir_y * p->move_speed, p->dir_x * p->move_speed);
-	if (keycode == KEY_D)
+	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
 		move_player(game, -p->dir_y * p->move_speed, -p->dir_x * p->move_speed);
-	if (keycode == KEY_LEFT)
+	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
 		rotate_player(p, -p->rot_speed);
-	if (keycode == KEY_RIGHT)
+	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
 		rotate_player(p, p->rot_speed);
-	return (0);
 }

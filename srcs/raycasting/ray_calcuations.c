@@ -21,11 +21,13 @@ void get_wall_texture(t_game *game, t_ray *ray, t_img **texture)
 
 unsigned int get_texture_color(t_img *texture, int x, int y)
 {
-	char		*pixel;
+	unsigned char	*pixel;
 	unsigned int	color;
 
-	pixel = texture->address + (y * texture->len) + (x * (texture->bpp / 8));
-	color = *(unsigned int *)pixel;
+	pixel = texture->xpm->texture.pixels
+		+ ((y * texture->xpm->texture.width + x) * 4);
+	color = ((unsigned int)pixel[0] << 24) | ((unsigned int)pixel[1] << 16)
+		| ((unsigned int)pixel[2] << 8) | pixel[3];
 	return (color);
 }
 
@@ -37,17 +39,17 @@ void draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int
 	t_img		*texture;
 
 	get_wall_texture(game, ray, &texture);
-	if (!texture || !texture->address || texture->width <= 0 || texture->height <= 0)
+	if (!texture || !texture->xpm || !texture->xpm->texture.pixels)
 		return ;
 	if (ray->side == 0)
 		wall_x = game->player.pos_y + ray->perp_wall_dist * ray->ray_y;
 	else
 		wall_x = game->player.pos_x + ray->perp_wall_dist * ray->ray_x;
 	wall_x -= floor(wall_x);
-	ray->texture_x = (int)(wall_x * (double)texture->width);
+	ray->texture_x = (int)(wall_x * (double)texture->xpm->texture.width);
 	if ((ray->side == 0 && ray->ray_x > 0) || (ray->side == 1 && ray->ray_y < 0))
-		ray->texture_x = texture->width - ray->texture_x - 1;
-	ray->step = (double)texture->height / (double)ray->line_height;
+		ray->texture_x = texture->xpm->texture.width - ray->texture_x - 1;
+	ray->step = (double)texture->xpm->texture.height / (double)ray->line_height;
 	ray->texture_position = (draw_start - SCREEN_HEIGHT / 2 + ray->line_height / 2) * ray->step;
 	y = draw_start;
 	while (y <= draw_end)
@@ -55,10 +57,10 @@ void draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int
 		ray->texture_y = (int)ray->texture_position;
 		if (ray->texture_y < 0)
 			ray->texture_y = 0;
-		else if (ray->texture_y >= texture->height)
-			ray->texture_y = texture->height - 1;
+		else if (ray->texture_y >= (int)texture->xpm->texture.height)
+			ray->texture_y = texture->xpm->texture.height - 1;
 		color = (int)get_texture_color(texture, ray->texture_x, ray->texture_y);
-		my_mlx_pixel_put(&game->frame, x, y, color);
+		my_mlx_pixel_put(game->frame, x, y, (unsigned int)color);
 		ray->texture_position += ray->step;
 		y++;
 	}

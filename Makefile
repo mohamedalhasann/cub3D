@@ -13,7 +13,7 @@
 NAME		= cub3D
 
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -I.
+CFLAGS		= -Wall -Wextra -Werror -I. -IMLX42/include
 
 SRC_DIR		= srcs
 OBJ_DIR		= obj
@@ -32,15 +32,17 @@ SRC			= $(SRC_DIR)/main.c \
 
 OBJ			= $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 
-MLX_DIR		= minilibx-linux
-MLX_LIB		= $(MLX_DIR)/libmlx.a
-MLX_FLAGS	= -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
+MLX_DIR		= MLX42
+MLX_BUILD	= $(MLX_DIR)/build
+MLX_LIB		= $(MLX_BUILD)/libmlx42.a
+MLX_FLAGS	= -L$(MLX_BUILD) -lmlx42 -lglfw -ldl -lGL -pthread -lm
 LIBFT_FLAGS	= -L$(LIBFT_DIR) -lft
 
 all: $(NAME)
 
 $(MLX_LIB):
-	@make -C $(MLX_DIR) --silent
+	@cmake -S $(MLX_DIR) -B $(MLX_BUILD) -DGLFW_FETCH=OFF
+	@cmake --build $(MLX_BUILD) --parallel
 
 $(LIBFT_LIB):
 	@make -C $(LIBFT_DIR) --silent
@@ -57,7 +59,6 @@ $(NAME): $(OBJ) $(MLX_LIB) $(LIBFT_LIB)
 
 clean:
 	@rm -rf $(OBJ_DIR)
-	@make -C $(MLX_DIR) clean --silent
 	@make -C $(LIBFT_DIR) clean --silent
 	@echo "object files cleaned"
 

@@ -2,54 +2,15 @@
 
 void init_mlx(t_game *game)
 {
-	game->mlx = mlx_init();
+	game->mlx = mlx_init(SCREEN_WIDTH, SCREEN_HEIGHT, "cub3D", true);
 	if (!game->mlx)
-		print_error_message(game,"error \nmlx init failed");
-	game->win = mlx_new_window(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3D");
-	if (!game->win)
-		print_error_message(game, "error \nwindow creation failed");	
-	game->frame.width = SCREEN_WIDTH;
-	game->frame.height = SCREEN_HEIGHT;
-	game->frame.image_ptr = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
-	if (!game->frame.image_ptr)
-		print_error_message(game, "error\nimage creation failed");	
-	game->frame.address = mlx_get_data_addr(game->frame.image_ptr,
-			&game->frame.bpp, &game->frame.len, &game->frame.endian);
-	if (!game->frame.address)
-		print_error_message(game,"error\nframe address creation failed");
-    load_game_textures(game);
-}
-
-void init_direction(t_game *game, char dir)
-{    
-	if (dir == 'N')
-    {
-        game->player.dir_x = 0.0;
-        game->player.dir_y = -1.0;
-        game->player.plane_y = 0.0;
-        game->player.plane_x = 0.66;
-    }
-    else if (dir == 'S')
-    {
-        game->player.dir_x = 0.0;
-        game->player.dir_y = 1.0;
-        game->player.plane_x = -0.66;
-        game->player.plane_y = 0.0;
-    }
-    else if (dir == 'E')
-    {
-		game->player.dir_y = 0.0;
-        game->player.dir_x = 1.0;
-        game->player.plane_y = 0.66;
-        game->player.plane_x = 0.0;
-    }
-    else if (dir == 'W')
-    {
-        game->player.dir_x = -1.0;
-        game->player.dir_y = 0.0;
-        game->player.plane_y = -0.66;
-        game->player.plane_x = 0.0;
-    }
+		print_error_message(game, "error\n MLX initialization failed");
+	game->frame = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
+	if (!game->frame)
+		print_error_message(game, "error \nimage creation failed \n");
+	if (mlx_image_to_window(game->mlx, game->frame, 0, 0) < 0)
+		print_error_message(game, "Error\nimage display failed \n");
+	load_game_textures(game);
 }
 void init_ray_direction(t_player *player, t_ray *ray, int x)
 {

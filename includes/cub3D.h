@@ -7,23 +7,10 @@
 # include <math.h> 
 # include <fcntl.h>
 # include "../lib/libft/libft.h"
-# include "../minilibx-linux/mlx.h" 
+# include "../MLX42/include/MLX42/MLX42.h"
 
 # define SCREEN_WIDTH  1024
 # define SCREEN_HEIGHT 768
-
-# define KEY_W 119
-# define KEY_A 97
-# define KEY_S 115
-# define KEY_D 100
-
-# define KEY_LEFT 65361
-# define KEY_RIGHT 65363
-# define KEY_ESC 65307
-
-# define ON_KEYDOWN 2
-# define ON_KEYUP   3
-# define ON_DESTROY 17
 
 // parsing strucutres
 typedef struct s_color
@@ -55,13 +42,7 @@ typedef struct s_parse_data
 
 typedef struct s_img
 {
-    void *image_ptr;
-    int height;
-    int width;
-    int bpp;
-    char *address;
-    int len;
-    int endian;
+    xpm_t   *xpm;
 }   t_img;
 
 typedef struct s_player
@@ -128,22 +109,21 @@ typedef struct s_map
 
 typedef struct s_game
 {
-    void        *mlx;
-    void        *win;
-    t_img       frame;
+    mlx_t       *mlx;
+    mlx_image_t *frame;
     t_map       map;
     t_player    player;
 }   t_game;
 
 // --------------------
 void	init_mlx(t_game *game);
-int		close_game(t_game *game);
-int		handle_keys(int keycode, t_game *game);
+void	close_game(t_game *game);
+void	hooks_handler(void *param);
 void    print_error_message(t_game *game,char *message);
 void	load_game_textures(t_game *game);
-void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
+void	my_mlx_pixel_put(mlx_image_t *img, int x, int y, unsigned int color);
 void	draw_floor_ceiling(t_game *game);
-int		render_game(void *param);
+void	render_game(void *param);
 int		is_wall(t_map *map, int x, int y);
 void	init_ray_direction(t_player *player, t_ray *ray ,int x);
 void	calculate_distance(t_player *p, t_ray *ray);
