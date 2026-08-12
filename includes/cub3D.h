@@ -141,7 +141,6 @@ int		close_game(t_game *game);
 int		handle_keys(int keycode, t_game *game);
 void    print_error_message(t_game *game,char *message);
 void	load_game_textures(t_game *game);
-void	destroy_game_textures(t_game *game);
 void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
 void	draw_floor_ceiling(t_game *game);
 int		render_game(void *param);

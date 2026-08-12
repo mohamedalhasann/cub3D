@@ -2,11 +2,11 @@
 
 int main(int argc, char **argv)
 {
-	t_game game;
+	t_game game = {0};
 	
 	if (argc != 2)
 	{
-		ft_putendl_fd("error\nusage: ./cub3D map_file", 2);
+		ft_putendl_fd("usage: ./cub3D map_file", 2);
 		return (1);
 	}
 	if (!parse_map_file(&game, argv[1]))

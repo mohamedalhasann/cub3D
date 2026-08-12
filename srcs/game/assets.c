@@ -32,6 +32,7 @@ static void free_game_map(t_game *game)
 	free(game->map.south_path);
 	free(game->map.west_path);
 	free(game->map.east_path);
+	free(game->mlx);
 	game->map.grid = NULL;
 	game->map.north_path = NULL;
 	game->map.south_path = NULL;
@@ -51,6 +52,8 @@ static void cleanup_game(t_game *game)
 		mlx_destroy_image(game->mlx, game->frame.image_ptr);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
+	if (game->mlx)
+		mlx_destroy_display(game->mlx);
 	free_game_map(game);	
 }
 
