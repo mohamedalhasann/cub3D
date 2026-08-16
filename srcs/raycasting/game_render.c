@@ -13,7 +13,7 @@ void	my_mlx_pixel_put(mlx_image_t *img, int x, int y, unsigned int color)
 	pixel[3] = (unsigned char)color;
 }
 
-void	draw_floor_ceiling(t_game *game)// background for the scene
+void	draw_floor_ceiling(t_game *game) // background for the scene
 {
 	int	x;
 	int	y;

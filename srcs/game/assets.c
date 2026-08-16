@@ -1,8 +1,8 @@
 #include "../../includes/cub3D.h"
 
-static void free_string_array(char **array)
+static void	free_string_array(char **array)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!array)
@@ -15,7 +15,7 @@ static void free_string_array(char **array)
 	free(array);
 }
 
-static void destroy_texture(t_game *game, t_img *texture)
+static void	destroy_texture(t_game *game, t_img *texture)
 {
 	(void)game;
 	if (texture->xpm)
@@ -25,7 +25,7 @@ static void destroy_texture(t_game *game, t_img *texture)
 	}
 }
 
-static void free_game_map(t_game *game)
+static void	free_game_map(t_game *game)
 {
 	free_string_array(game->map.grid);
 	free(game->map.north_path);
@@ -39,7 +39,7 @@ static void free_game_map(t_game *game)
 	game->map.east_path = NULL;
 }
 
-static void cleanup_game(t_game *game)
+void	close_game(t_game *game)
 {
 	if (!game)
 		return ;
@@ -56,14 +56,9 @@ static void cleanup_game(t_game *game)
 	free_game_map(game);
 }
 
-void close_game(t_game *game)
-{
-	cleanup_game(game);
-}
-
-void print_error_message(t_game *game, char *message)
+void	print_error_message(t_game *game, char *message)
 {
 	ft_putendl_fd(message, 2);
-	cleanup_game(game);
+	close_game(game);
 	exit(1);
 }

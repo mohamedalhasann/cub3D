@@ -1,6 +1,6 @@
 #include "../../includes/cub3D.h"
 
-void get_wall_texture(t_game *game, t_ray *ray, t_img **texture)
+void	get_wall_texture(t_game *game, t_ray *ray, t_img **texture)
 {
 	if (ray->side == 0)
 	{
@@ -16,27 +16,26 @@ void get_wall_texture(t_game *game, t_ray *ray, t_img **texture)
 		else
 			*texture = &game->map.south_image;
 	}
-	
 }
 
-unsigned int get_texture_color(t_img *texture, int x, int y)
+unsigned int	get_texture_color(t_img *texture, int x, int y)
 {
 	unsigned char	*pixel;
 	unsigned int	color;
 
-	pixel = texture->xpm->texture.pixels
-		+ ((y * texture->xpm->texture.width + x) * 4);
-	color = ((unsigned int)pixel[0] << 24) | ((unsigned int)pixel[1] << 16)
-		| ((unsigned int)pixel[2] << 8) | pixel[3];
+	pixel = texture->xpm->texture.pixels + ((y * texture->xpm->texture.width
+				+ x) * 4);
+	color = ((unsigned int)pixel[0] << 24) | ((unsigned int)pixel[1] << 16) | ((unsigned int)pixel[2] << 8) | pixel[3];
 	return (color);
 }
 
-void draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int x)
+void	draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end,
+		int x)
 {
-	int			color;
-	int			y;
-	double		wall_x;
-	t_img		*texture;
+	int		color;
+	int		y;
+	double	wall_x;
+	t_img	*texture;
 
 	get_wall_texture(game, ray, &texture);
 	if (!texture || !texture->xpm || !texture->xpm->texture.pixels)
@@ -47,10 +46,12 @@ void draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end, int
 		wall_x = game->player.pos_x + ray->perp_wall_dist * ray->ray_x;
 	wall_x -= floor(wall_x);
 	ray->texture_x = (int)(wall_x * (double)texture->xpm->texture.width);
-	if ((ray->side == 0 && ray->ray_x > 0) || (ray->side == 1 && ray->ray_y < 0))
+	if ((ray->side == 0 && ray->ray_x > 0) || (ray->side == 1
+			&& ray->ray_y < 0))
 		ray->texture_x = texture->xpm->texture.width - ray->texture_x - 1;
 	ray->step = (double)texture->xpm->texture.height / (double)ray->line_height;
-	ray->texture_position = (draw_start - SCREEN_HEIGHT / 2 + ray->line_height / 2) * ray->step;
+	ray->texture_position = (draw_start - SCREEN_HEIGHT / 2 + ray->line_height
+			/ 2) * ray->step;
 	y = draw_start;
 	while (y <= draw_end)
 	{
@@ -83,6 +84,8 @@ void	shoot_rays(t_game *game)
 		if (ray.perp_wall_dist <= 0.0001)
 			ray.perp_wall_dist = 0.0001;
 		ray.line_height = (int)(SCREEN_HEIGHT / ray.perp_wall_dist);
+		if (ray.line_height < 1)
+			ray.line_height = 1;
 		ray.draw_start = -ray.line_height / 2 + SCREEN_HEIGHT / 2;
 		line_height = ray.line_height;
 		draw_start = ray.draw_start;

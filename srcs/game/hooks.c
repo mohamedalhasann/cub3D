@@ -2,7 +2,7 @@
 
 static int	row_len(const char *row)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (row[len])
@@ -20,12 +20,13 @@ int	is_wall(t_map *map, int x, int y)
 		return (1);
 	return (0);
 }
-static void rotate_player(t_player *p, double angle) // ??
+
+static void	rotate_player(t_player *p, double angle) // ??
 {
-	double old_dir_x;
-	double old_dir_y;
-	double old_plane_x;
-	double old_plane_y;
+	double	old_dir_x;
+	double	old_dir_y;
+	double	old_plane_x;
+	double	old_plane_y;
 
 	old_dir_x = p->dir_x;
 	old_dir_y = p->dir_y;
@@ -37,10 +38,10 @@ static void rotate_player(t_player *p, double angle) // ??
 	p->plane_y = old_plane_x * sin(angle) + old_plane_y * cos(angle);
 }
 
-static void move_player(t_game *game, double dx, double dy)
+static void	move_player(t_game *game, double dx, double dy)
 {
-	t_player *player;
-	
+	t_player	*player;
+
 	player = &game->player;
 	if (!is_wall(&game->map, (int)(player->pos_x + dx), (int)player->pos_y))
 		player->pos_x += dx;
@@ -48,11 +49,11 @@ static void move_player(t_game *game, double dx, double dy)
 		player->pos_y += dy;
 }
 
-void hooks_handler(void *param)
+void	hooks_handler(void *param)
 {
 	t_game		*game;
-	t_player *p;
-	
+	t_player	*p;
+
 	game = (t_game *)param;
 	p = &game->player;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
