@@ -129,7 +129,7 @@ typedef struct s_game
 
 int check_map(t_game *game);
 int check_file(t_game *game);
-void get_txtr_paths(t_game *game);
+int get_txtr_paths(t_game *game);
 void get_map(t_game *game);
 int get_player_pos(t_game *game,int i,int j,int max_j);
 int  duplicate_map(t_game *game);
@@ -137,7 +137,8 @@ void floodfill_player(t_game *game,int posx,int posy);
 void floodfill_all(t_game *game,int posx,int posy,char **padded_map);
 int get_player_pos(t_game *game,int i,int j,int max_j);
 char	**map_padding(t_game *game,int i,int j,int y,int z);
-
+void cleanup(t_game *game);
+void free_texture_paths(t_game *game);
 // MLX42 /raycasting functions 
 void			init_mlx(t_game *game);
 void			close_game(t_game *game);

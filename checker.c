@@ -16,13 +16,24 @@ int	check_ext(char *filename)
 	}
 	return (1);
 }
-
+void	print_texture_paths(t_game *game)
+{
+	printf("=== TEXTURE PATHS ===\n");
+	printf("NO: %s\n", game->map.north_path);
+	printf("SO: %s\n", game->map.south_path);
+	printf("WE: %s\n", game->map.west_path);
+	printf("EA: %s\n", game->map.east_path);
+	printf("=====================\n");
+}
 
 int check_file(t_game *game)
 {
     if(!check_ext(game->map.file_name))
 		return 0;
-	get_txtr_paths(game);
+	if(!get_txtr_paths(game))
+		return 0;
+	print_texture_paths(game);
+	// get_colors(game);
 	if(!game->map.north_path || !game->map.west_path 
 		|| !game->map.south_path || !game->map.east_path)
 	{
@@ -41,12 +52,39 @@ void print_map(char **grid)
 		i++;
 	}
 }
+int check_valid(t_game *game)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while(game->map.grid[i])
+	{
+		j = 0;
+		while(game->map.grid[i][j])
+		{
+			if(game->map.grid[i][j] != '1' && game->map.grid[i][j] != '0'
+				&&game->map.grid[i][j] != 'S' && game->map.grid[i][j] != 'E'
+				&&game->map.grid[i][j] != 'W' &&game->map.grid[i][j] != 'N'
+				&&game->map.grid[i][j] != ' ')
+				{
+					// game->map.isvalid = 0;
+					return 0;
+				}
+				j++;
+		}
+		i++;
+	}
+	return 1;
+}
 
 int check_map(t_game *game)
 {
     if(!check_file(game))
 		return 0;
 	get_map(game);
+	if(!check_valid(game))
+		return 0;
 	if(game->map.grid == NULL)
 		return 0;
 	if(!get_player_pos(game,0,0,0))
@@ -64,5 +102,6 @@ int check_map(t_game *game)
     game->map.isvalid, game->player.x, game->player.y,
     game->map.height, game->map.width);
 	printf("player pos x = %i, y = %i\n",game->player.x,game->player.y);
+	free_texture_paths(game);
 	return 1;
 }

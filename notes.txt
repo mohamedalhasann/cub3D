@@ -10,3 +10,12 @@
 3.fill_map() doesnt handle ft_strdup failure
 4. 
 }
+
+
+
+
+
+
+
+++
+handle texture path name having spaces

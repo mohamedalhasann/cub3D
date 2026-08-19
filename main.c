@@ -62,6 +62,31 @@ int	count_lines(char *filename)
 	return (count);
 }
 
+void	free_double_ptr(char **ptr)
+{
+	int	i;
+
+	if (!ptr)
+		return;
+	i = 0;
+	while (ptr[i])
+	{
+		free(ptr[i]);
+		i++;
+	}
+	free(ptr);
+}
+
+void cleanup(t_game *game)
+{
+	free_double_ptr(game->map.file_content);
+	free_double_ptr(game->map.grid);
+	free_double_ptr(game->map.tmp_map);
+	free_double_ptr(game->map.padded);
+	free_texture_paths(game);
+
+}
+
 int	main(int argc, char **argv)
 {
 	t_game	game;
@@ -82,9 +107,12 @@ int	main(int argc, char **argv)
 	game.map.fullmap = game.map.file_content;
 	if (!check_map(&game))
 	{
+		cleanup(&game);
 		printf("Error\n");
 		return (1);
 	}
+	printf("%i\n",game.map.floor_color);
+	cleanup(&game);
 	return (0);
 }
 
