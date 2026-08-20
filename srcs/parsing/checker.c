@@ -16,15 +16,6 @@ int	check_ext(char *filename)
 	}
 	return (1);
 }
-void	print_texture_paths(t_game *game)
-{
-	printf("=== TEXTURE PATHS ===\n");
-	printf("NO: %s\n", game->map.north_path);
-	printf("SO: %s\n", game->map.south_path);
-	printf("WE: %s\n", game->map.west_path);
-	printf("EA: %s\n", game->map.east_path);
-	printf("=====================\n");
-}
 
 int check_file(t_game *game)
 {
@@ -32,8 +23,8 @@ int check_file(t_game *game)
 		return 0;
 	if(!get_txtr_paths(game))
 		return 0;
-	print_texture_paths(game);
-	// get_colors(game);
+	if(!read_map_colors(game))
+		return 0;
 	if(!game->map.north_path || !game->map.west_path 
 		|| !game->map.south_path || !game->map.east_path)
 	{
@@ -41,16 +32,6 @@ int check_file(t_game *game)
 			return 0;
 	}
 	return 1;
-}
-
-void print_map(char **grid)
-{
-	int i = 0;
-	while(grid[i])
-	{
-			printf("%s\n",grid[i]);
-		i++;
-	}
 }
 int check_valid(t_game *game)
 {
@@ -83,25 +64,21 @@ int check_map(t_game *game)
     if(!check_file(game))
 		return 0;
 	get_map(game);
-	if(!check_valid(game))
-		return 0;
 	if(game->map.grid == NULL)
+		return 0;
+	if(!check_valid(game))
 		return 0;
 	if(!get_player_pos(game,0,0,0))
 		return 0;
 	if (!duplicate_map(game))
 		return 0;
 	floodfill_player(game,game->player.x,game->player.y);
-	// print_map(map_padding(game));
-	floodfill_all(game,0,0,map_padding(game,0,0,1,0));
+	if (!map_padding(game, 0, 0, 1, 0))
+		return (0);
+	floodfill_all(game,0,0,game->map.padded);
 	if(game->map.isvalid == 1)
 		return 0;
 	if(game->player.x == 0 || game->player.y == 0)
 		return 0;
-	printf("start isvalid=%d, player x=%d y=%d, height=%d width=%d\n",
-    game->map.isvalid, game->player.x, game->player.y,
-    game->map.height, game->map.width);
-	printf("player pos x = %i, y = %i\n",game->player.x,game->player.y);
-	free_texture_paths(game);
 	return 1;
 }

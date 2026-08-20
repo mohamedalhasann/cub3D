@@ -42,33 +42,90 @@ int has_spcs(char *path)
 	return 1;
 }
 
+static char	*skip_spaces(char *line)
+{
+	while (*line == ' ')
+		line++;
+	return (line);
+}
+
+static int	read_number(char **line, int *number)
+{
+	long	value;
+	int	digit;
+
+	*line = skip_spaces(*line);
+	if (!ft_isdigit(**line))
+		return (0);
+	value = 0;
+	while (ft_isdigit(**line))
+	{
+		digit = *((*line)++) - '0';
+		value = value * 10 + digit;
+		if (value > 255)
+			return (0);
+	}
+	*number = value;
+	*line = skip_spaces(*line);
+	return (1);
+}
+
+static int	parse_rgb_line(char *line, int *color)
+{
+	int	red;
+	int	green;
+	int	blue;
+
+	line = skip_spaces(line + 1);
+	if (!read_number(&line, &red) || *line++ != ',')
+		return (0);
+	if (!read_number(&line, &green) || *line++ != ',')
+		return (0);
+	if (!read_number(&line, &blue))
+		return (0);
+	line = skip_spaces(line);
+	if (*line != '\0')
+		return (0);
+	*color = (red << 16) | (green << 8) | blue;
+	return (1);
+}
+
+static int	is_blank_line(char *line)
+{
+	line = skip_spaces(line);
+	return (*line == '\0');
+}
+
+static int	is_map_line(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] == ' ')
+		i++;
+	return ((line[i] == '1' || line[i] == 'N' || line[i] == 'S'
+			|| line[i] == 'E' || line[i] == 'W')
+		&& ft_isdigit(line[i + 1]));
+}
+
 int get_values(char *file_content,t_game *game,int j)
 {
-		if(file_content[j] == 'N' && file_content[j+1] == 'O')
-		{
-			if(!get_path(&game->map.north_path,file_content)
-				|| !has_spcs(game->map.north_path))
-			return 0;
-		}
-		else if(file_content[j] == 'S' && file_content[j+1] == 'O')
-		{
-			if(!get_path(&game->map.south_path,file_content) 
-				|| !has_spcs(game->map.south_path))
-				return 0;
-		}
-		else if(file_content[j] == 'W' && file_content[j+1] == 'E')
-		{
-			if(!get_path(&game->map.west_path,file_content) 
-				|| !has_spcs(game->map.west_path))
-				return 0;
-		}
-		else if(file_content[j] == 'E' && file_content[j+1] == 'A')
-		{
-				if(!get_path(&game->map.east_path,file_content) 
-					|| !has_spcs(game->map.north_path))
-					return 0;
-		}
-		return 1;
+	file_content = skip_spaces(file_content);
+	if (is_blank_line(file_content) || is_map_line(file_content))
+		return (1);
+	if (file_content[j] == 'N' && file_content[j + 1] == 'O')
+		return (get_path(&game->map.north_path, file_content)
+			&& has_spcs(game->map.north_path));
+	if (file_content[j] == 'S' && file_content[j + 1] == 'O')
+		return (get_path(&game->map.south_path, file_content)
+			&& has_spcs(game->map.south_path));
+	if (file_content[j] == 'W' && file_content[j + 1] == 'E')
+		return (get_path(&game->map.west_path, file_content)
+			&& has_spcs(game->map.west_path));
+	if (file_content[j] == 'E' && file_content[j + 1] == 'A')
+		return (get_path(&game->map.east_path, file_content)
+			&& has_spcs(game->map.east_path));
+	return (0);
 }
 
 void	free_texture_paths(t_game *game)
@@ -87,6 +144,30 @@ void	free_texture_paths(t_game *game)
 	game->map.east_path = NULL;
 }
 
+static int	parse_color_line(t_game *game, char *line)
+{
+	line = skip_spaces(line);
+	if (line[0] == 'F' && line[1] == ' ')
+	{
+		if (game->map.floor_color_seen)
+			return (0);
+		if (!parse_rgb_line(line, &game->map.floor_color))
+			return (0);
+		game->map.floor_color_seen = 1;
+		return (1);
+	}
+	if (line[0] == 'C' && line[1] == ' ')
+	{
+		if (game->map.ceiling_color_seen)
+			return (0);
+		if (!parse_rgb_line(line, &game->map.ceiling_color))
+			return (0);
+		game->map.ceiling_color_seen = 1;
+		return (1);
+	}
+	return (1);
+}
+
 int get_txtr_paths(t_game *game)
 {
 	int i;
@@ -95,6 +176,16 @@ int get_txtr_paths(t_game *game)
 	i = 0;
 	while(file_content[i])
 	{
+		if (is_map_line(file_content[i]))
+			break ;
+		if (is_blank_line(file_content[i]))
+		{
+			i++;
+			continue ;
+		}
+		if (file_content[i][0] != 'N' && file_content[i][0] != 'S'
+			&& file_content[i][0] != 'W' && file_content[i][0] != 'E')
+			return (0);
 		j = 0;
 		while(j < 2)
 		{
@@ -108,6 +199,30 @@ int get_txtr_paths(t_game *game)
 		i++;
 	}
 	return 1;
+}
+
+int	read_map_colors(t_game *game)
+{
+	int	i;
+
+	i = 0;
+	while (game->map.file_content[i])
+	{
+		if (is_map_line(game->map.file_content[i]))
+			break ;
+		if (is_blank_line(game->map.file_content[i]))
+		{
+			i++;
+			continue ;
+		}
+		if (game->map.file_content[i][0] != 'F'
+			&& game->map.file_content[i][0] != 'C')
+			return (0);
+		if (!parse_color_line(game, game->map.file_content[i]))
+			return (0);
+		i++;
+	}
+	return (game->map.floor_color_seen && game->map.ceiling_color_seen);
 }
 
 int is_empty(char *str)
@@ -144,7 +259,6 @@ void fill_map(int i,t_game *game)
 	while(game->map.file_content[i])
 	{
 		game->map.grid[k] = ft_strdup(game->map.file_content[i]);
-		printf("%s\n",game->map.grid[k]);
 		k++; 
 		i++;
 	}

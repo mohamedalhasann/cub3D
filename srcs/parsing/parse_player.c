@@ -5,6 +5,38 @@ void set_values(t_game *game,int j,int i,char c)
 	game->player.in_map_spawn = c; 
 	game->player.y = j;
 	game->player.x = i;
+	game->player.pos_x = j + 0.5;
+	game->player.pos_y = i + 0.5;
+	game->player.move_speed = 0.08;
+	game->player.rot_speed = 0.05;
+	if (c == 'N')
+	{
+		game->player.dir_x = -1;
+		game->player.dir_y = 0;
+		game->player.plane_x = 0;
+		game->player.plane_y = 0.66;
+	}
+	else if (c == 'S')
+	{
+		game->player.dir_x = 1;
+		game->player.dir_y = 0;
+		game->player.plane_x = 0;
+		game->player.plane_y = -0.66;
+	}
+	else if (c == 'E')
+	{
+		game->player.dir_x = 0;
+		game->player.dir_y = 1;
+		game->player.plane_x = 0.66;
+		game->player.plane_y = 0;
+	}
+	else if (c == 'W')
+	{
+		game->player.dir_x = 0;
+		game->player.dir_y = -1;
+		game->player.plane_x = -0.66;
+		game->player.plane_y = 0;
+	}
 }
 
 int get_player_pos(t_game *game,int i,int j,int max_j)
@@ -30,7 +62,6 @@ int get_player_pos(t_game *game,int i,int j,int max_j)
 	}
 	game->map.height = i;
 	game->map.width = max_j;
-	printf("max j: %i\n",max_j);
 	return 1;
 }
 

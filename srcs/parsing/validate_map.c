@@ -29,7 +29,13 @@ int allocate_padded(t_game *game)
 	{
 		game->map.padded[i] = malloc(sizeof(char) * (game->map.width + 3));
 		if (!game->map.padded[i])
+		{
+			while (i > 0)
+				free(game->map.padded[--i]);
+			free(game->map.padded);
+			game->map.padded = NULL;
 			return (0);
+		}
 		i++;
 	}
 	game->map.padded[i] = NULL;
