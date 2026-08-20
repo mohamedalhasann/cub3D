@@ -49,6 +49,10 @@ void	draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end,
 	if ((ray->side == 0 && ray->ray_x > 0) || (ray->side == 1
 			&& ray->ray_y < 0))
 		ray->texture_x = texture->xpm->texture.width - ray->texture_x - 1;
+	if (ray->texture_x < 0)
+		ray->texture_x = 0;
+	else if (ray->texture_x >= (int)texture->xpm->texture.width)
+		ray->texture_x = texture->xpm->texture.width - 1;
 	ray->step = (double)texture->xpm->texture.height / (double)ray->line_height;
 	ray->texture_position = (draw_start - SCREEN_HEIGHT / 2 + ray->line_height
 			/ 2) * ray->step;

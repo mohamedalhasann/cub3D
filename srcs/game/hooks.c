@@ -66,11 +66,11 @@ void	hooks_handler(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
 		move_player(game, -p->dir_x * p->move_speed, -p->dir_y * p->move_speed);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-		move_player(game, p->dir_y * p->move_speed, p->dir_x * p->move_speed);
+		move_player(game, -p->dir_y * p->move_speed, p->dir_x * p->move_speed);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
-		move_player(game, -p->dir_y * p->move_speed, -p->dir_x * p->move_speed);
+		move_player(game, p->dir_y * p->move_speed, -p->dir_x * p->move_speed);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-		rotate_player(p, -p->rot_speed);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
 		rotate_player(p, p->rot_speed);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
+		rotate_player(p, -p->rot_speed);
 }

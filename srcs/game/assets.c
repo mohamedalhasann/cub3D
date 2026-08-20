@@ -27,12 +27,18 @@ static void	destroy_texture(t_game *game, t_img *texture)
 
 static void	free_game_map(t_game *game)
 {
+	free_string_array(game->map.file_content);
 	free_string_array(game->map.grid);
+	free_string_array(game->map.tmp_map);
+	free_string_array(game->map.padded);
 	free(game->map.north_path);
 	free(game->map.south_path);
 	free(game->map.west_path);
 	free(game->map.east_path);
+	game->map.file_content = NULL;
 	game->map.grid = NULL;
+	game->map.tmp_map = NULL;
+	game->map.padded = NULL;
 	game->map.north_path = NULL;
 	game->map.south_path = NULL;
 	game->map.west_path = NULL;

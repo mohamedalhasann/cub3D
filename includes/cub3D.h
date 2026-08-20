@@ -2,6 +2,7 @@
 # define CUB3D_H
 
 # include "../MLX42/include/MLX42/MLX42.h"
+# include "../lib/gnl/srcs/get_next_line.h"
 # include "../lib/libft/libft.h"
 # include <fcntl.h>
 # include <math.h>
@@ -91,21 +92,34 @@ typedef struct s_ray
 
 typedef struct s_map
 {
-	char		**grid;
-	int			width;
-	int			height;
-	int			floor_color;
-	int			ceiling_color;
-	char		*north_path;
-	char		*south_path;
-	char		*west_path;
-	char		*east_path;
-	t_img		north_image;
-	t_img		west_image;
-	t_img		east_image;
-	t_img		south_image;
+    
+    char    **grid;
+    int     width;
+    int     height;
+    int     floor_color;
+    int     ceiling_color;
+    int     floor_color_seen;
+    int     ceiling_color_seen;
+    char    *north_path;
+    char    *south_path;
+    char    *west_path;
+    char    *east_path;
+    
+    char    *av;
+    char    **fullmap;
+    int     map_len;
+    int     isvalid;
+    int     file_len;
+    char    *file_name;
+    char    **file_content;
+    char    **tmp_map;
+    char	**padded;
 
-}				t_map;
+    t_img   north_image;
+    t_img   west_image;
+    t_img   east_image;
+    t_img   south_image;
+}   t_map;
 
 typedef struct s_game
 {
@@ -135,4 +149,18 @@ void			draw_wall_slice(t_game *game, t_ray *ray, int draw_start,
 					int draw_end, int x);
 void			shoot_rays(t_game *game);
 int				parse_map_file(t_game *game, const char *path);
+int				check_ext(char *filename);
+int				check_file(t_game *game);
+int				check_valid(t_game *game);
+int				check_map(t_game *game);
+int				get_txtr_paths(t_game *game);
+void			get_map(t_game *game);
+int				get_player_pos(t_game *game, int i, int j, int max_j);
+int				duplicate_map(t_game *game);
+void			floodfill_player(t_game *game, int posx, int posy);
+char			**map_padding(t_game *game, int i, int j, int y, int z);
+void			floodfill_all(t_game *game, int posx, int posy,
+					char **padded_map);
+void			free_texture_paths(t_game *game);
+int				read_map_colors(t_game *game);
 #endif
