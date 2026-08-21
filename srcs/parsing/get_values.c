@@ -171,7 +171,6 @@ static int	parse_color_line(t_game *game, char *line)
 int get_txtr_paths(t_game *game)
 {
 	int i;
-	int j;
 	char **file_content = game->map.file_content;
 	i = 0;
 	while(file_content[i])
@@ -183,18 +182,18 @@ int get_txtr_paths(t_game *game)
 			i++;
 			continue ;
 		}
+		if (file_content[i][0] == 'F' || file_content[i][0] == 'C')
+		{
+			i++;
+			continue ;
+		}
 		if (file_content[i][0] != 'N' && file_content[i][0] != 'S'
 			&& file_content[i][0] != 'W' && file_content[i][0] != 'E')
 			return (0);
-		j = 0;
-		while(j < 2)
+		if (!get_values(file_content[i], game, 0))
 		{
-			if(!get_values(file_content[i],game,j))
-			{
-				free_texture_paths(game);
-				return 0;
-			}
-			j++;
+			free_texture_paths(game);
+			return (0);
 		}
 		i++;
 	}
@@ -211,6 +210,14 @@ int	read_map_colors(t_game *game)
 		if (is_map_line(game->map.file_content[i]))
 			break ;
 		if (is_blank_line(game->map.file_content[i]))
+		{
+			i++;
+			continue ;
+		}
+		if (game->map.file_content[i][0] == 'N'
+			|| game->map.file_content[i][0] == 'S'
+			|| game->map.file_content[i][0] == 'W'
+			|| game->map.file_content[i][0] == 'E')
 		{
 			i++;
 			continue ;
