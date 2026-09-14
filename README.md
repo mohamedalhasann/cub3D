@@ -1,50 +1,90 @@
+*This project has been created as part of the 42 curriculum by malhassa and yabuawad.*
 
-the player is a single dot on the 2D map
-from that dot , we shoot out rays across the Field of View
-and the number of rays = SCREEN_WIDTH
-each ray travels forward until it hits a wall
-when it hits a wall, we measure how far away that wall is from the player
-the code use that distance to decide how tall to draw the wall's vertical line on the screen
-short distance = tall line on screen 
-long distance = short line on screen
+# cub3D
+
+## Description
+
+`cub3D` is a raycasting project inspired by wolf3d game
+
+its goal is to turn a simple two-dimensional map into a first-person view that
+looks three-dimensional.
+
+the map is made of a grid where some cells are walls and others are open
+spaces.
+the player starts in one of the open cells and can move around the
+map. for every vertical column of the window, the program sends a ray from the
+player in the direction of the camera. the ray travels through the map using
+the DDA algorithm until it reaches a wall.
+
+the distance between the player and the wall controls how tall that wall is
+drawn on screen. close walls appear tall and distant walls appear short. the
+program also chooses the correct wall texture based on the side that the ray
+hits, then draws the floor and ceiling with their configured colours.
+
+alongside the renderer,  the project checks that map files are valid, verifies
+that the map is closed, loads the required textures, and prevents the player
+from walking through walls
+
+## Instructions
+
+### Requirements
+
+- A C compiler such as `cc`
+- `make`
+- MLX42
+
+MLX42 is included in the repository
+
+### Compile
+
+From the repository root:
+
+```sh
+make
+```
+
+this builds the MLX42 library and libft before creating the `cub3D` executable.
+to remove object files, run `make clean`. To remove all generated files and
+the executable, run `make fclean`.
+
+### Run
+
+pass one `.cub` map file to the executable: (there are ready valid,invalid maps)
+
+```sh
+./cub3D maps/map.cub
+```
+
+controls:
+
+- `W` and `S`: move forward and backward
+- `A` and `D`: move left and right
+- left and right arrow keys: rotate the view
+- `Esc`: close the window
+
+### Map format
+
+a map file contains four wall texture paths, floor and ceiling colours, and a
+closed map. the required identifiers are `NO`, `SO`, `WE`, `EA`, `F`, and `C`.
+the map uses `1` for walls, `0` for walkable space, and one player start
+character: `N`, `S`, `E`, or `W`. the map must have exactly one player and must
+be enclosed by walls
+
+## Resources
+
+- [Introduction to Raycasting](https://lodev.org/cgtutor/raycasting.html)
+- [Ray-Casting Tutorial](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/)
+- [raycasting basics](https://splashkit.io/guides/physics/6-raycasting-basics/)
+- [what is DDA algorithm](https://en.wikipedia.org/wiki/Digital_differential_analyzer)
 
 
-why do we need to shoot out rays?
-because the computer map is just a 2d grid of numbers. it has to figure out how far away every wall is from your eyes so it can draw them at the right height
-
-
-what shooting a ray actually means?
-a ray isnt an object like a bullet,in math and code, a ray is just a line vector starting at the player's position
-in code :
-1.pick the direction
-2.step froward in grid units using DDA algorithm
-3.check for a collision (a wall?)
-4.the moment it hits a wall, calculate the distance from the player to that wall tile
-
-why do we need to do this? we do this once every vertical line of pixels on the screen
-1.calculating wall height 
-2.textures and colors
-
-we shoot rays by combining player's direction vector and camera's vector
-if we used the direction vector : all rays would point in the exact same direction
-if we use the camera plane : it would shoot out to your side
-
-
-so : the player's direction sets where you look , while the camera plane (pointing right / left) defines your horizontal screen baseline and its length sets the FOV angle
-by sweeping across this plane, we shoot rays forward to measure wall distances and render the screen as a 3d image pixel by pixel
+AI was used to help define and explain the mathematical and raycasting
+formulas, as well as the colour and texture calculations used in the project
 
 
 
 
 
-
-
-
-
-
-
-8/8:
-cub3d is basically a 2d map that gets turned into a 3d-looking view using raycasting
 
 
 
