@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   game_render.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/14 16:27:04 by malhassa          #+#    #+#             */
+/*   Updated: 2026/09/14 16:36:28 by malhassa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3D.h"
 
 void	my_mlx_pixel_put(mlx_image_t *img, int x, int y, unsigned int color)
@@ -13,7 +25,7 @@ void	my_mlx_pixel_put(mlx_image_t *img, int x, int y, unsigned int color)
 	pixel[3] = (unsigned char)color;
 }
 
-void	draw_floor_ceiling(t_game *game) // background for the scene
+void	draw_floor_ceiling(t_game *game)
 {
 	int	x;
 	int	y;

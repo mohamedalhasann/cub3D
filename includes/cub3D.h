@@ -145,8 +145,7 @@ void			calculate_distance(t_player *p, t_ray *ray);
 void			dda_algorithm(t_ray *ray, t_map *map);
 unsigned int	get_texture_color(t_img *texture, int x, int y);
 void			get_wall_texture(t_game *game, t_ray *ray, t_img **texture);
-void			draw_wall_slice(t_game *game, t_ray *ray, int draw_start,
-					int draw_end, int x);
+void			draw_wall_slice(t_game *game, t_ray *ray, int x);
 void			shoot_rays(t_game *game);
 int				parse_map_file(t_game *game, const char *path);
 int				check_ext(char *filename);

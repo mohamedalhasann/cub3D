@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   textures.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/14 16:27:14 by malhassa          #+#    #+#             */
+/*   Updated: 2026/09/14 16:27:15 by malhassa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3D.h"
 
 static void	load_texture(t_game *game, t_img *texture, char *path)
@@ -17,3 +29,4 @@ void	load_game_textures(t_game *game)
 	load_texture(game, &game->map.west_image, game->map.west_path);
 	load_texture(game, &game->map.east_image, game->map.east_path);
 }
+

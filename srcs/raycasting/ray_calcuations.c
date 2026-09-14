@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray_calcuations.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/14 16:26:55 by malhassa          #+#    #+#             */
+/*   Updated: 2026/09/14 16:41:16 by malhassa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3D.h"
 
 void	get_wall_texture(t_game *game, t_ray *ray, t_img **texture)
@@ -25,39 +37,22 @@ unsigned int	get_texture_color(t_img *texture, int x, int y)
 
 	pixel = texture->xpm->texture.pixels + ((y * texture->xpm->texture.width
 				+ x) * 4);
-	color = ((unsigned int)pixel[0] << 24) | ((unsigned int)pixel[1] << 16) | ((unsigned int)pixel[2] << 8) | pixel[3];
+	color = ((unsigned int)pixel[0] << 24) | ((unsigned int)pixel[1]
+			<< 16) | ((unsigned int)pixel[2] << 8) | pixel[3];
 	return (color);
 }
 
-void	draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end,
-		int x)
+static void	draw_texture_column(t_game *game, t_ray *ray, int x)
 {
+	t_img	*texture;
 	int		color;
 	int		y;
-	double	wall_x;
-	t_img	*texture;
 
 	get_wall_texture(game, ray, &texture);
-	if (!texture || !texture->xpm || !texture->xpm->texture.pixels)
-		return ;
-	if (ray->side == 0)
-		wall_x = game->player.pos_y + ray->perp_wall_dist * ray->ray_y;
-	else
-		wall_x = game->player.pos_x + ray->perp_wall_dist * ray->ray_x;
-	wall_x -= floor(wall_x);
-	ray->texture_x = (int)(wall_x * (double)texture->xpm->texture.width);
-	if ((ray->side == 0 && ray->ray_x > 0) || (ray->side == 1
-			&& ray->ray_y < 0))
-		ray->texture_x = texture->xpm->texture.width - ray->texture_x - 1;
-	if (ray->texture_x < 0)
-		ray->texture_x = 0;
-	else if (ray->texture_x >= (int)texture->xpm->texture.width)
-		ray->texture_x = texture->xpm->texture.width - 1;
-	ray->step = (double)texture->xpm->texture.height / (double)ray->line_height;
-	ray->texture_position = (draw_start - SCREEN_HEIGHT / 2 + ray->line_height
-			/ 2) * ray->step;
-	y = draw_start;
-	while (y <= draw_end)
+	ray->texture_position = (ray->draw_start - SCREEN_HEIGHT / 2
+			+ ray->line_height / 2) * ray->step;
+	y = ray->draw_start;
+	while (y <= ray->draw_end)
 	{
 		ray->texture_y = (int)ray->texture_position;
 		if (ray->texture_y < 0)
@@ -71,13 +66,33 @@ void	draw_wall_slice(t_game *game, t_ray *ray, int draw_start, int draw_end,
 	}
 }
 
+void	draw_wall_slice(t_game *game, t_ray *ray, int x)
+{
+	t_img	*texture;
+
+	get_wall_texture(game, ray, &texture);
+	if (!texture || !texture->xpm || !texture->xpm->texture.pixels)
+		return ;
+	ray->wall_x = game->player.pos_y + ray->perp_wall_dist * ray->ray_y;
+	if (ray->side)
+		ray->wall_x = game->player.pos_x + ray->perp_wall_dist * ray->ray_x;
+	ray->wall_x -= floor(ray->wall_x);
+	ray->texture_x = (int)(ray->wall_x * (double)texture->xpm->texture.width);
+	if ((ray->side == 0 && ray->ray_x > 0) || (ray->side == 1
+			&& ray->ray_y < 0))
+		ray->texture_x = texture->xpm->texture.width - ray->texture_x - 1;
+	if (ray->texture_x < 0)
+		ray->texture_x = 0;
+	else if (ray->texture_x >= (int)texture->xpm->texture.width)
+		ray->texture_x = texture->xpm->texture.width - 1;
+	ray->step = (double)texture->xpm->texture.height / (double)ray->line_height;
+	draw_texture_column(game, ray, x);
+}
+
 void	shoot_rays(t_game *game)
 {
 	t_ray	ray;
 	int		width_x;
-	int		line_height;
-	int		draw_start;
-	int		draw_end;
 
 	width_x = 0;
 	while (width_x < SCREEN_WIDTH)
@@ -91,15 +106,12 @@ void	shoot_rays(t_game *game)
 		if (ray.line_height < 1)
 			ray.line_height = 1;
 		ray.draw_start = -ray.line_height / 2 + SCREEN_HEIGHT / 2;
-		line_height = ray.line_height;
-		draw_start = ray.draw_start;
-		if (draw_start < 0)
-			draw_start = 0;
-		ray.draw_end = line_height / 2 + SCREEN_HEIGHT / 2;
-		draw_end = ray.draw_end;
-		if (draw_end >= SCREEN_HEIGHT)
-			draw_end = SCREEN_HEIGHT - 1;
-		draw_wall_slice(game, &ray, draw_start, draw_end, width_x);
+		if (ray.draw_start < 0)
+			ray.draw_start = 0;
+		ray.draw_end = ray.line_height / 2 + SCREEN_HEIGHT / 2;
+		if (ray.draw_end >= SCREEN_HEIGHT)
+			ray.draw_end = SCREEN_HEIGHT - 1;
+		draw_wall_slice(game, &ray, width_x);
 		width_x++;
 	}
 }
