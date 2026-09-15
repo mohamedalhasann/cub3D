@@ -114,6 +114,7 @@ typedef struct s_map
     char    **file_content;
     char    **tmp_map;
     char	**padded;
+	int z;
 
     t_img   north_image;
     t_img   west_image;
@@ -157,9 +158,14 @@ void			get_map(t_game *game);
 int				get_player_pos(t_game *game, int i, int j, int max_j);
 int				duplicate_map(t_game *game);
 void			floodfill_player(t_game *game, int posx, int posy);
-char			**map_padding(t_game *game, int i, int j, int y, int z);
-void			floodfill_all(t_game *game, int posx, int posy,
-					char **padded_map);
+char			**map_padding(t_game *game, int i, int j, int y,int z);
+void			floodfill_all(t_game *game, int posx, int posy,char **padded_map);
 void			free_texture_paths(t_game *game);
-int				read_map_colors(t_game *game);
+int				read_map_colors(t_game *game,int i);
+ int	is_map_line(char *line);
+ int	is_blank_line(char *line);
+ char	*skip_spaces(char *line);
+ int	is_empty(char *str);
+ void value_setter(t_game *game,char c);
+ int	get_values(char *file_content, t_game *game, int j);
 #endif
