@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3D.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/16 14:59:45 by malhassa          #+#    #+#             */
+/*   Updated: 2026/09/16 15:01:09 by malhassa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -13,7 +25,6 @@
 # define SCREEN_WIDTH 1024
 # define SCREEN_HEIGHT 768
 
-// parsing strucutres
 typedef struct s_color
 {
 	int			r;
@@ -27,16 +38,14 @@ typedef struct s_point
 }				t_point;
 typedef struct s_parse_data
 {
-	// these are all flags 1,0 if they exist
 	int			north_flag;
 	int			south_flag;
 	int			west_flag;
 	int			east_flag;
 	int			floor_color_flag;
 	int			ceiling_color_flag;
-	int map_started;  // set to 1 when map lines begin
-	int player_count;
-		// tracks N,S,E,W spawns (if its != 1 m the map hass missing or multiple player spawn points)
+	int			map_started;
+	int			player_count;
 }				t_parse_data;
 
 // --------------------
@@ -50,22 +59,22 @@ typedef struct s_player
 {
 	int			x;
 	int			y;
-	char in_map_spawn; // N,S,W,E from map
-	double pos_x;      // position on grid
-	double pos_y;      // same here
-	double dir_x;      // vector x
-	double dir_y;      // vecotr y
-	double plane_x;    // camera x
-	double plane_y;    // camera y
-	double move_speed; // step distance per frame
-	double rot_speed;  // turn angle per frame in radians
+	char		in_map_spawn;
+	double		pos_x;
+	double		pos_y;
+	double		dir_x;
+	double		dir_y;
+	double		plane_x;
+	double		plane_y;
+	double		move_speed;
+	double		rot_speed;
 }				t_player;
 
 typedef struct s_ray
 {
-	int map_x;       // current integer map square x the ray is in
-	int map_y;       //  ---- y
-	double camera_x; // -1/0/1
+	int			map_x;
+	int			map_y;
+	double		camera_x;
 	double		ray_x;
 	double		ray_y;
 
@@ -75,8 +84,8 @@ typedef struct s_ray
 	double		delta_dist_y;
 	int			step_x;
 	int			step_y;
-	int hit;  // 1 if ray hit a wall, 0 if still moving
-	int side; // 1 if hit N/S wall , 0 if hit E/W wall
+	int			hit;
+	int			side;
 
 	double		perp_wall_dist;
 	int			line_height;
@@ -92,34 +101,33 @@ typedef struct s_ray
 
 typedef struct s_map
 {
-    
-    char    **grid;
-    int     width;
-    int     height;
-    int     floor_color;
-    int     ceiling_color;
-    int     floor_color_seen;
-    int     ceiling_color_seen;
-    char    *north_path;
-    char    *south_path;
-    char    *west_path;
-    char    *east_path;
-    
-    char    *av;
-    char    **fullmap;
-    int     map_len;
-    int     isvalid;
-    int     file_len;
-    char    *file_name;
-    char    **file_content;
-    char    **tmp_map;
-    char	**padded;
+	char		**grid;
+	int			width;
+	int			height;
+	int			floor_color;
+	int			ceiling_color;
+	int			floor_color_seen;
+	int			ceiling_color_seen;
+	char		*north_path;
+	char		*south_path;
+	char		*west_path;
+	char		*east_path;
 
-    t_img   north_image;
-    t_img   west_image;
-    t_img   east_image;
-    t_img   south_image;
-}   t_map;
+	char		*av;
+	char		**fullmap;
+	int			map_len;
+	int			isvalid;
+	int			file_len;
+	char		*file_name;
+	char		**file_content;
+	char		**tmp_map;
+	char		**padded;
+
+	t_img		north_image;
+	t_img		west_image;
+	t_img		east_image;
+	t_img		south_image;
+}				t_map;
 
 typedef struct s_game
 {
@@ -129,7 +137,6 @@ typedef struct s_game
 	t_player	player;
 }				t_game;
 
-// --------------------
 void			init_mlx(t_game *game);
 void			close_game(t_game *game);
 void			hooks_handler(void *param);
@@ -161,18 +168,18 @@ void			floodfill_player(t_game *game, int posx, int posy);
 char			**map_padding(t_game *game, int i, int j, int y);
 void			floodfill_all(t_game *game, int posx, int posy,
 					char **padded_map);
-					int	allocate_padded(t_game *game);
+int				allocate_padded(t_game *game);
 void			free_texture_paths(t_game *game);
 int				read_map_colors(t_game *game, int i);
-int	is_empty(char *str);
-void	fill_map(int i, t_game *game);
-void	get_map(t_game *game);
-void	free_texture_paths(t_game *game);
-int	read_number(char **line, int *number);
-int	parse_rgb_line(char *line, int *color);
-char	*skip_spaces(char *line);
-int	has_spcs(char *path);
- int	is_blank_line(char *line);
- int	txtr_paths(t_game *game, int i, char **file_content);
- int	get_values(char *file_content, t_game *game, int j);
+int				is_empty(char *str);
+void			fill_map(int i, t_game *game);
+void			get_map(t_game *game);
+void			free_texture_paths(t_game *game);
+int				read_number(char **line, int *number);
+int				parse_rgb_line(char *line, int *color);
+char			*skip_spaces(char *line);
+int				has_spcs(char *path);
+int				is_blank_line(char *line);
+int				txtr_paths(t_game *game, int i, char **file_content);
+int				get_values(char *file_content, t_game *game, int j);
 #endif

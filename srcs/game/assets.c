@@ -6,13 +6,13 @@
 /*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 16:27:25 by malhassa          #+#    #+#             */
-/*   Updated: 2026/09/14 16:27:26 by malhassa         ###   ########.fr       */
+/*   Updated: 2026/09/16 15:29:13 by malhassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-static void	free_string_array(char **array)
+static void	free_string_array(char **array) 
 {
 	int	i;
 
