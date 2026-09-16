@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validate_map.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yabuawad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/16 13:07:32 by yabuawad          #+#    #+#             */
+/*   Updated: 2026/09/16 13:07:33 by yabuawad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3D.h"
 
 void	fill_updown(char **padded, int last_row, int width)
@@ -15,15 +27,14 @@ void	fill_updown(char **padded, int last_row, int width)
 	padded[last_row][z] = '\0';
 }
 
-int allocate_padded(t_game *game)
+int	allocate_padded(t_game *game)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	game->map.padded = malloc(sizeof(char *) * (game->map.height + 3));
 	if (!game->map.padded)
 		return (0);
-
 	i = 0;
 	while (i < game->map.height + 2)
 	{
@@ -39,13 +50,13 @@ int allocate_padded(t_game *game)
 		i++;
 	}
 	game->map.padded[i] = NULL;
-	return 1;
+	return (1);
 }
 
-char	**map_padding(t_game *game,int i,int j,int y,int z)
+char	**map_padding(t_game *game, int i, int j, int y, int z)
 {
-	if(!allocate_padded(game))
-		return NULL;
+	if (!allocate_padded(game))
+		return (NULL);
 	fill_updown(game->map.padded, game->map.height + 1, game->map.width);
 	while (game->map.grid[i])
 	{
@@ -70,18 +81,15 @@ char	**map_padding(t_game *game,int i,int j,int y,int z)
 	return (game->map.padded);
 }
 
-void floodfill_all(t_game *game,int posx,int posy,char **padded_map)
+void	floodfill_all(t_game *game, int posx, int posy, char **padded_map)
 {
-	if (posx < 0 || posy < 0
-    	|| posx >= game->map.width + 2
-    	|| posy >= game->map.height + 2)
-	    return;
+	if (posx < 0 || posy < 0 || posx >= game->map.width + 2
+		|| posy >= game->map.height + 2)
+		return ;
 	if (padded_map[posy][posx] == 'V' || padded_map[posy][posx] == '1')
 		return ;
-	if (padded_map[posy][posx] == '0'
-		|| padded_map[posy][posx] == 'N'
-		|| padded_map[posy][posx] == 'S'
-		|| padded_map[posy][posx] == 'E'
+	if (padded_map[posy][posx] == '0' || padded_map[posy][posx] == 'N'
+		|| padded_map[posy][posx] == 'S' || padded_map[posy][posx] == 'E'
 		|| padded_map[posy][posx] == 'W')
 	{
 		game->map.isvalid = 1;
@@ -90,8 +98,8 @@ void floodfill_all(t_game *game,int posx,int posy,char **padded_map)
 	if (padded_map[posy][posx] != 'X')
 		return ;
 	padded_map[posy][posx] = 'V';
-	floodfill_all(game, posx + 1, posy,padded_map);
-	floodfill_all(game, posx - 1, posy,padded_map);
-	floodfill_all(game, posx, posy + 1,padded_map);
-	floodfill_all(game, posx, posy - 1,padded_map);
+	floodfill_all(game, posx + 1, posy, padded_map);
+	floodfill_all(game, posx - 1, posy, padded_map);
+	floodfill_all(game, posx, posy + 1, padded_map);
+	floodfill_all(game, posx, posy - 1, padded_map);
 }
