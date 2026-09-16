@@ -6,7 +6,7 @@
 #    By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/07/25 00:00:00 by mohamed           #+#    #+#              #
-#    Updated: 2026/07/29 13:13:03 by malhassa         ###   ########.fr        #
+#    Updated: 2026/09/16 14:17:48 by malhassa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,10 @@ SRC			= $(SRC_DIR)/main.c \
 			  $(SRC_DIR)/parsing/checker.c \
 			  $(SRC_DIR)/parsing/get_values.c \
 			  $(SRC_DIR)/parsing/parse_player.c \
-			  $(SRC_DIR)/parsing/validate_map.c
+			  $(SRC_DIR)/parsing/validate_map.c \
+			  $(SRC_DIR)/parsing/parse_colors.c \
+			  $(SRC_DIR)/parsing/helper.c \
+			  $(SRC_DIR)/parsing/assets.c
 
 GNL_SRC		= $(GNL_DIR)/srcs/get_next_line.c \
 			  $(GNL_DIR)/srcs/get_next_line_utils.c

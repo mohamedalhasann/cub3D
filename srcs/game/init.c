@@ -6,40 +6,103 @@
 /*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 16:27:17 by malhassa          #+#    #+#             */
-/*   Updated: 2026/09/14 16:27:18 by malhassa         ###   ########.fr       */
+/*   Updated: 2026/09/16 14:35:25 by malhassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-void	init_mlx(t_game *game)
+static int	fill_content(char **content, char *argv)
 {
-	game->mlx = mlx_init(SCREEN_WIDTH, SCREEN_HEIGHT, "cub3D", true);
-	if (!game->mlx)
-		print_error_message(game, "error\n MLX initialization failed");
-	game->frame = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
-	if (!game->frame)
-		print_error_message(game, "error \nimage creation failed \n");
-	if (mlx_image_to_window(game->mlx, game->frame, 0, 0) < 0)
-		print_error_message(game, "Error\nimage display failed \n");
-	load_game_textures(game);
+	int		x;
+	int		fd;
+	char	*line;
+	int		len;
+
+	x = 0;
+	fd = open(argv, O_RDONLY);
+	if (fd < 0)
+		return (0);
+	line = get_next_line(fd);
+	while (line)
+	{
+		len = ft_strlen(line);
+		while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r'))
+			line[--len] = '\0';
+		content[x++] = line;
+		line = get_next_line(fd);
+	}
+	close(fd);
+	content[x] = NULL;
+	return (1);
 }
 
-void	init_ray_direction(t_player *player, t_ray *ray, int x)
+static int	count_lines(char *filename)
 {
-	const double	epsilon = 1e-6;
+	int		fd;
+	int		count;
+	char	*line;
 
-	ray->camera_x = 2.0 * x / (double)SCREEN_WIDTH - 1.0;
-	ray->ray_x = player->dir_x + player->plane_x * ray->camera_x;
-	ray->ray_y = player->dir_y + player->plane_y * ray->camera_x;
-	ray->map_x = (int)player->pos_x;
-	ray->map_y = (int)player->pos_y;
-	if (fabs(ray->ray_x) < epsilon)
-		ray->delta_dist_x = 1e30;
-	else
-		ray->delta_dist_x = fabs(1.0 / ray->ray_x);
-	if (fabs(ray->ray_y) < epsilon)
-		ray->delta_dist_y = 1e30;
-	else
-		ray->delta_dist_y = fabs(1.0 / ray->ray_y);
+	fd = open(filename, O_RDONLY);
+	count = 0;
+	if (fd < 0)
+		return (0);
+	line = get_next_line(fd);
+	while (line)
+	{
+		free(line);
+		line = get_next_line(fd);
+		count++;
+	}
+	close(fd);
+	return (count);
+}
+
+static void	free_double_ptr(char **ptr)
+{
+	int	i;
+
+	if (!ptr)
+		return ;
+	i = 0;
+	while (ptr[i])
+	{
+		free(ptr[i]);
+		i++;
+	}
+	free(ptr);
+}
+
+static void	cleanup(t_game *game)
+{
+	free_double_ptr(game->map.file_content);
+	free_double_ptr(game->map.grid);
+	free_double_ptr(game->map.tmp_map);
+	free_double_ptr(game->map.padded);
+	free_texture_paths(game);
+}
+
+int	parse_map_file(t_game *game, const char *path)
+{
+	game->map.file_name = (char *)path;
+	game->map.file_len = count_lines(game->map.file_name);
+	if (game->map.file_len == 0)
+		return (0);
+	game->map.file_content = malloc((game->map.file_len + 1) * sizeof(char *));
+	if (!game->map.file_content)
+		return (0);
+	if (!fill_content(game->map.file_content, (char *)path))
+	{
+		cleanup(game);
+		return (0);
+	}
+	game->map.av = (char *)path;
+	game->map.map_len = game->map.file_len;
+	game->map.fullmap = game->map.file_content;
+	if (!check_map(game))
+	{
+		cleanup(game);
+		return (0);
+	}
+	return (1);
 }

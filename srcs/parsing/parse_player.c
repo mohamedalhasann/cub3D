@@ -1,22 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_player.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: malhassa <malhassa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/16 14:04:27 by malhassa          #+#    #+#             */
+/*   Updated: 2026/09/16 14:36:41 by malhassa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3D.h"
 
-void set_values(t_game *game,int j,int i,char c)
+void	value_setter(t_game *game, char c)
 {
-	game->player.in_map_spawn = c; 
-	game->player.y = j;
-	game->player.x = i;
-	game->player.pos_x = j + 0.5;
-	game->player.pos_y = i + 0.5;
-	game->player.move_speed = 0.08;
-	game->player.rot_speed = 0.05;
-	if (c == 'N')
-	{
-		game->player.dir_x = -1;
-		game->player.dir_y = 0;
-		game->player.plane_x = 0;
-		game->player.plane_y = 0.66;
-	}
-	else if (c == 'S')
+	if (c == 'S')
 	{
 		game->player.dir_x = 1;
 		game->player.dir_y = 0;
@@ -39,36 +37,56 @@ void set_values(t_game *game,int j,int i,char c)
 	}
 }
 
-int get_player_pos(t_game *game,int i,int j,int max_j)
+void	set_values(t_game *game, int j, int i, char c)
 {
-	while(game->map.grid[i])
+	game->player.in_map_spawn = c;
+	game->player.y = j;
+	game->player.x = i;
+	game->player.pos_x = j + 0.5;
+	game->player.pos_y = i + 0.5;
+	game->player.move_speed = 0.08;
+	game->player.rot_speed = 0.05;
+	if (c == 'N')
+	{
+		game->player.dir_x = -1;
+		game->player.dir_y = 0;
+		game->player.plane_x = 0;
+		game->player.plane_y = 0.66;
+	}
+	else if (c == 'E' || c == 'S' || c == 'W')
+		value_setter(game, c);
+}
+
+int	get_player_pos(t_game *game, int i, int j, int max_j)
+{
+	while (game->map.grid[i])
 	{
 		j = 0;
-		while(game->map.grid[i][j])
+		while (game->map.grid[i][j])
 		{
-			if(game->map.grid[i][j] == 'N' || game->map.grid[i][j] == 'S'
-				|| game->map.grid[i][j]== 'E' || game->map.grid[i][j] == 'W')
-				{
-					if(!game->player.in_map_spawn)
-						set_values(game, j,i,game->map.grid[i][j]);
-					else
-						return 0;
-				}
-				j++;
-				if(j > max_j)
-					max_j = j;	
+			if (game->map.grid[i][j] == 'N' || game->map.grid[i][j] == 'S'
+				|| game->map.grid[i][j] == 'E' || game->map.grid[i][j] == 'W')
+			{
+				if (!game->player.in_map_spawn)
+					set_values(game, j, i, game->map.grid[i][j]);
+				else
+					return (0);
+			}
+			j++;
+			if (j > max_j)
+				max_j = j;
 		}
 		i++;
 	}
 	game->map.height = i;
 	game->map.width = max_j;
-	return 1;
+	return (1);
 }
 
 int	duplicate_map(t_game *game)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	game->map.tmp_map = malloc((game->map.height + 1) * sizeof(char *));
 	if (!game->map.tmp_map)
@@ -81,10 +99,7 @@ int	duplicate_map(t_game *game)
 		{
 			j = 0;
 			while (j < i)
-			{
-				free(game->map.tmp_map[j]);
-				j++;
-			}
+				free(game->map.tmp_map[j++]);
 			free(game->map.tmp_map);
 			game->map.tmp_map = NULL;
 			return (0);
@@ -95,18 +110,20 @@ int	duplicate_map(t_game *game)
 	return (1);
 }
 
-void floodfill_player(t_game *game, int posx, int posy)
+void	floodfill_player(t_game *game, int posx, int posy)
 {
-	if (posx < 0 || posy < 0
-		|| posx >= game->map.height || (posy >=(int) ft_strlen(game->map.tmp_map[posx])))
+	if (posx < 0 || posy < 0 || posx >= game->map.height
+		|| (posy >= (int)ft_strlen(game->map.tmp_map[posx])))
 	{
 		game->map.isvalid = 1;
 		return ;
 	}
-	if (game->map.tmp_map[posx][posy] == '1' || game->map.tmp_map[posx][posy] == '*'
-		|| game->map.tmp_map[posx][posy] == '\0' )
+	if (game->map.tmp_map[posx][posy] == '1'
+		|| game->map.tmp_map[posx][posy] == '*'
+		|| game->map.tmp_map[posx][posy] == '\0')
 		return ;
-	if( game->map.tmp_map[posx][posy] == ' ' ||  game->map.tmp_map[posx][posy] == '\n')
+	if (game->map.tmp_map[posx][posy] == ' '
+		|| game->map.tmp_map[posx][posy] == '\n')
 	{
 		game->map.isvalid = 1;
 		return ;
